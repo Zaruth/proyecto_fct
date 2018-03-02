@@ -1,0 +1,13 @@
+login:
+    path: /login
+    defaults: { _controller: FctBundle:Profesor:login }
+
+login_check:
+    path: /login_check
+
+logout:
+    path: /logout
+
+fct_homepage:
+    path:     /
+    defaults: { _controller: FctBundle:Default:index }
