@@ -1,12 +1,20 @@
 login:
     path: /login
     defaults: { _controller: FctBundle:Profesor:login }
+    
+registro:
+    path: /registro
+    defaults: { _controller: FctBundle:Profesor:registro }
 
 login_check:
     path: /login_check
 
 logout:
     path: /logout
+
+perfil:
+    path: /perfil
+    defaults: { _controller: FctBundle:Profesor:perfil }
 
 fct_homepage:
     path:     /

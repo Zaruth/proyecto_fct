@@ -82,16 +82,16 @@ class Empresa
     private $provincia;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="tlf", type="integer")
+     * @ORM\Column(name="tlf", type="string", length=9)
      */
     private $tlf;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="mail", type="string", length=50)
+     * @ORM\Column(name="mail", type="string", length=50, unique=true)
      */
     private $mail;
 
@@ -277,7 +277,7 @@ class Empresa
     /**
      * Set tlf
      *
-     * @param integer $tlf
+     * @param string $tlf
      *
      * @return Empresa
      */
@@ -291,7 +291,7 @@ class Empresa
     /**
      * Get tlf
      *
-     * @return int
+     * @return string
      */
     public function getTlf()
     {

@@ -94,16 +94,16 @@ class Profesor implements UserInterface
     private $pass;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="tlf", type="integer")
+     * @ORM\Column(name="tlf", type="string", length=9)
      */
     private $tlf;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="mail", type="string", length=50)
+     * @ORM\Column(name="mail", type="string", length=50, unique=true)
      */
     private $mail;
 
@@ -319,7 +319,7 @@ class Profesor implements UserInterface
     /**
      * Set tlf
      *
-     * @param integer $tlf
+     * @param string $tlf
      *
      * @return Profesor
      */
@@ -333,7 +333,7 @@ class Profesor implements UserInterface
     /**
      * Get tlf
      *
-     * @return int
+     * @return string
      */
     public function getTlf()
     {

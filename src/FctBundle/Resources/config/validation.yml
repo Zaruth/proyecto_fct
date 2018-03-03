@@ -1,0 +1,45 @@
+FctBundle\Entity\Profesor:
+    properties:
+        nif:
+            - NotBlank: {message: "El nif está vacío."}
+            - Regex:
+                pattern: '/(([X-Z]{1})([-]?)(\d{7})([-]?)([A-Z]{1}))|((\d{8})([-]?)([A-Z]{1}))/'
+                message: "El dni debe ser de 8 dígitos y 1 letra en mayúsculas."
+        nombre:
+            - NotBlank: {message: "El nombre está vacío."}
+            - Regex:
+                pattern: "/([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})/"
+                message: "El nombre debe ser de 3 a 30 carácteres."
+        ape1:
+            - NotBlank: {message: "El 1º apellido está vacío."}
+            - Regex:
+                pattern: "/([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})/"
+                message: "El 1º apellido debe ser de 3 a 30 carácteres."
+        ape2:
+            - NotBlank: {message: "El 2º apellido está vacío."}
+            - Regex:
+                pattern: "/([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})/"
+                message: "El 2º apellido debe ser de 3 a 30 carácteres."
+        nuser:
+            - NotBlank: {message: "El nombre de usuario está vacío."}
+            - Regex:
+                pattern: '/([a-zA-Z]{8,20})/'
+                message: "El nombre de usuario debe de ser de 8 a 20 carácteres sin espacios con letras mayúsculas o minusculas."
+        pass:
+            - NotBlank: {message: "La contraseña está vacía."}
+            - Regex:
+                pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/'
+                message: "La contraseña debe de ser de 8 a 20 carácteres con al menos 1 dígito, 1 minúscula y 1 mayúscula"
+        tlf:
+            - NotBlank: {message: "El telefono está vacío."}
+            - Regex:
+                pattern: '/\d{9}/'
+                message: "El telefono debe de ser de 9 dígitos."
+        mail:
+            - NotBlank: {message: "El email está vacío."}
+            - Length:
+                max: 50
+                maxMessage: 'La longitud máxima del email es de 50 carácteres.'
+            - Regex:
+                pattern: '/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/'
+                message: "El email debe tener un formato correcto y como máximo 50 carácteres."

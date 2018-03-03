@@ -1,5 +1,18 @@
 {% extends "FctBundle::layout.html.twig" %}
 
 {% block content %}
-<h1>hola mundo</h1>
+    <div class="text-center">
+        <br>
+        {% for class in app.session.flashbag().get('class') %}
+            <center><div class="col-lg-4">
+            <div class="alert {{ class }}">
+                {% for message in app.session.flashbag().get('status') %}
+                     {{ message }}
+                {% endfor %}
+            </div>
+            </div></center>
+        {% endfor %}
+        <h1>hola mundo</h1>
+        <br>hola<br>funciona
+    </div>
 {% endblock %}

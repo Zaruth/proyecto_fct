@@ -1,0 +1,31 @@
+{% extends "FctBundle::layout.html.twig" %}
+
+{% block content %}
+    <div class="text-center">
+        {% if is_granted('ROLE_USER') %}
+            <strong>
+                Eres un user normal
+            </strong>
+        {% endif %}
+
+        {% if is_granted('ROLE_ADMIN') %}
+            <strong>
+                Eres un admin to flama
+            </strong>
+        {% endif %}
+        <br>
+        <center><div class="col-lg-4">
+        {% for class in app.session.flashbag().get('class') %}
+            <div class="alert {{ class }}">
+                {% for message in app.session.flashbag().get('status') %}
+                     {{ message }}
+                {% endfor %}
+            </div>
+            
+        {% endfor %}
+        <h1>Mi perfil</h1>
+        <br>
+        Esto es el perfil de {{app.user.nombre}} {{app.user.ape1}}
+        </div></center>
+    </div>
+{% endblock %}

@@ -1,6 +1,6 @@
 {% extends "FctBundle::layout.html.twig" %}
 {% block content %}
-    
+    <center><div class="col-lg-4">
     {% if is_granted('ROLE_USER') %}
         <strong>
             Eres un user normal
@@ -12,29 +12,19 @@
             Eres un admin to flama
         </strong>
     {% endif %}
-    <div class="col-lg-4">
-        <h2>Identifícate</h2>
+    <div>
+        <h2 >Identifícate</h2>
         <hr/>
-        <form action="{{path("login_check")}}" method="post">
+        <form action="{{path("login_check")}}" method="post" class="text-left">
             <label>Nombre de usuario:</label>
             <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control"/>
             <label>Contraseña:</label>
             <input type="password" id="password" name="_password" class="form-control"/>
             <br>
-            <input type="submit" value="Entrar" class="btn btn-success"/>
+            <center><input type="submit" value="Entrar" class="btn btn-success"/></center>
             <input type="hidden" name="_target_path" value="/login"/>
         </form>
     </div>
-            
-    <div class="col-lg-4">
-        <h2>Regístrate</h2>
-        <hr/>
-        {% for message in app.session.flashbag().get('status') %}
-            <div class="alert alert-success">{{ message }}</div>
-        {% endfor %}
-        {{form_start(form, {'action':'', 'method':'POST'})}}
-        {{form_end(form)}}
-    </div>
-    
     <div class="clearfix"></div>
+    </div></center>
 {% endblock %}
