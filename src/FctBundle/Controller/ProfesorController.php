@@ -21,11 +21,11 @@ class ProfesorController extends Controller {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
-        
+
         $profesores = new Profesor();
         $em = $this->getDoctrine()->getEntityManager();
         $profesor_repo = $em->getRepository("FctBundle:Profesor");
-        
+
         $profesores = $profesor_repo->findAll();
 
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
@@ -57,7 +57,7 @@ class ProfesorController extends Controller {
             $this->session->getFlashBag()->add("class", $class);
             $this->session->getFlashBag()->add("status", $status);
         }
-        
+
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         } else {
@@ -68,8 +68,14 @@ class ProfesorController extends Controller {
             ));
         }
     }
-    
+
     public function deleteAction(Request $request, $nif) {
+        $salir = false;
+        $user = $this->getUser();
+        if ($user->getNif() == $nif) {  
+            $this->session->invalidate();
+        }
+
 
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -82,19 +88,20 @@ class ProfesorController extends Controller {
         $profesor = $profesor_repo->findOneBy(array("nif" => $nif));
         $em->remove($profesor);
         $em->flush();
+
         $status = "Profesor borrado";
         $class = "alert-danger";
         $this->session->getFlashBag()->add("class", $class);
         $this->session->getFlashBag()->add("status", $status);
-        
-        
+
+
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         } else {
-            return $this->redirect('http://localhost/proyecto_fct/web');
+            return $this->redirectToRoute('listado');
         }
     }
-    
+
     public function loginAction(Request $request) {
 
         $authenticationUtils = $this->get("security.authentication_utils");
