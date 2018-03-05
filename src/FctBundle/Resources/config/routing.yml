@@ -13,8 +13,16 @@ logout:
     path: /logout
 
 perfil:
-    path: /perfil
-    defaults: { _controller: FctBundle:Profesor:perfil }
+    path: /perfil/{nif}
+    defaults: { _controller: FctBundle:Profesor:perfil, nif: ~ }
+    
+listado_prof:
+    path: /listado_prof
+    defaults: { _controller: FctBundle:Profesor:listado }
+
+delete_prof:
+    path: /delete_prof/{nif}
+    defaults: { _controller: FctBundle:Profesor:delete, nif: ~}
 
 fct_homepage:
     path:     /

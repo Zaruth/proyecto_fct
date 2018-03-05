@@ -1,7 +1,9 @@
 {% extends "FctBundle::layout.html.twig" %}
 {% block content %}
-    <center><div class="col-lg-4">
-    {% if is_granted('ROLE_USER') %}
+    <br/>
+    <center>
+        <div class="text-center col-lg-4 jumbotron">
+    {# if is_granted('ROLE_USER') %}
         <strong>
             Eres un user normal
         </strong>
@@ -11,7 +13,7 @@
         <strong>
             Eres un admin to flama
         </strong>
-    {% endif %}
+    {% endif #}
     <div>
         <h2 >Identifícate</h2>
         <hr/>

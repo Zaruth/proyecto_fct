@@ -110,7 +110,7 @@ class Profesor implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="role", type="string", length=10)
+     * @ORM\Column(name="role", type="string", length=16)
      */
     private $role;
 

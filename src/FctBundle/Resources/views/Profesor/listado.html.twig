@@ -1,0 +1,49 @@
+{% extends "FctBundle::layout.html.twig" %}
+
+{% block content %}
+    <br/>
+    <center>
+        <div class="text-center col-lg-4 jumbotron" style="max-width: 600px;">
+            {# if is_granted('ROLE_USER') %}
+                <strong>
+                    Eres un user normal
+                </strong>
+            {% endif %}
+    
+            {% if is_granted('ROLE_ADMIN') %}
+                <strong>
+                    Eres un admin to flama
+                </strong>
+            {% endif #}
+
+
+            {% for class in app.session.flashbag().get('class') %}
+                <div class="alert {{ class }}">
+                    {% for message in app.session.flashbag().get('status') %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <table class="table" align="center" style="max-width: 400px;">
+                <thead>
+                    <tr>
+                        <th colspan="3"><h1>Listado</h1></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for profesor in usuarios %}
+                        <tr>
+                            <th scope="row">{{ loop.index }}</th>
+                            <td style="text-align: left"><a href="{{path("perfil")}}/{{profesor.nif}}">{{ profesor.nombre }} {{ profesor.ape1 }} {{ profesor.ape2 }}</a></td>
+                            {% if profesor.img == null %}
+                                <td style="text-align: left"><img src="../assets/img/data/default_prof.png" style="width: 32px;height: 32px;"></td>
+                            {% else %}
+                                <td style="text-align: left"><img src="../assets/img/data/{{profesor.img}}.jpg" style="width: 32px;height: 32px;"></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </center>
+{% endblock %}
