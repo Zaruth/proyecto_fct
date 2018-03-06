@@ -4,19 +4,6 @@
     <br/>
     <center>
         <div class="text-center col-lg-4 jumbotron" style="max-width: 600px;">
-            {# if is_granted('ROLE_USER') %}
-                <strong>
-                    Eres un user normal
-                </strong>
-            {% endif %}
-    
-            {% if is_granted('ROLE_ADMIN') %}
-                <strong>
-                    Eres un admin to flama
-                </strong>
-            {% endif #}
-
-
             {% for class in app.session.flashbag().get('class') %}
                 <div class="alert {{ class }}">
                     {% for message in app.session.flashbag().get('status') %}

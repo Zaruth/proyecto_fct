@@ -25,5 +25,14 @@ delete_prof:
     defaults: { _controller: FctBundle:Profesor:delete, nif: ~}
 
 fct_homepage:
-    path:     /
+    path: /
     defaults: { _controller: FctBundle:Default:index }
+    
+panel_maestro:
+    path: /panel
+    defaults: { _controller: FctBundle:Profesor:panel_maestro}
+    
+funcion_panel:
+    path: /panel/{id}/{numero}
+    defaults: { _controller: FctBundle:Profesor:funcion_panel, id: ~, numero: ~}
+

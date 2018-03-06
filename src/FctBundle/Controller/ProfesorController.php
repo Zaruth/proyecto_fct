@@ -15,6 +15,58 @@ class ProfesorController extends Controller {
     public function __construct() {
         $this->session = new Session();
     }
+    
+    public function panel_maestroAction(Request $request) {
+        $authenticationUtils = $this->get("security.authentication_utils");
+        $error = $authenticationUtils->getLastAuthenticationError();
+        $last_username = $authenticationUtils->getLastUsername();
+        
+        if ($this->getUser()->getRole() != 'ROLE_SUPER_ADMIN') {
+            $status = "No tienes acceso al panel maestro.";
+            $class = "alert-danger";
+            $this->session->getFlashBag()->add("class", $class);
+            $this->session->getFlashBag()->add("status", $status);
+            return $this->redirectToRoute('fct_homepage');
+        } else {
+            return $this->render('FctBundle:Profesor:panel.html.twig', array(
+                "error" => $error,
+                "last_username" => $last_username,
+            ));
+        }
+    }
+    
+    public function funcion_panelAction(Request $request, $id, $numero) {
+        if ($id != null) {
+            switch ($id){
+                case 1:
+                    $this->generar_profesores($numero);
+                    $status = "Datos de prueba generados.";
+                    $class = "alert-success";
+                    break;
+                case 2:
+                    $this->borrar_profesores();
+                    $status = "Datos borrados con éxito.";
+                    $class = "alert-success";
+                    break;
+                case 3:
+                    break;
+                default:
+                    break;
+            }
+        }
+        
+        if ($this->getUser()->getRole() != 'ROLE_SUPER_ADMIN') {
+            $status = "No tienes acceso al panel maestro.";
+            $class = "alert-danger";
+            $this->session->getFlashBag()->add("class", $class);
+            $this->session->getFlashBag()->add("status", $status);
+            return $this->redirectToRoute('fct_homepage');
+        } else {
+            $this->session->getFlashBag()->add("class", $class);
+            $this->session->getFlashBag()->add("status", $status);
+            return $this->redirectToRoute('panel_maestro');
+        }
+    }
 
     public function listadoAction(Request $request) {
 
@@ -29,12 +81,12 @@ class ProfesorController extends Controller {
         $profesores = $profesor_repo->findAll();
 
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw $this->createAccessDeniedException();
+            return $this->redirectToRoute('fct_homepage');
         } else {
             return $this->render('FctBundle:Profesor:listado.html.twig', array(
-                        "error" => $error,
-                        "last_username" => $last_username,
-                        "usuarios" => $profesores
+                "error" => $error,
+                "last_username" => $last_username,
+                "usuarios" => $profesores
             ));
         }
     }
@@ -59,7 +111,7 @@ class ProfesorController extends Controller {
         }
 
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            throw $this->createAccessDeniedException();
+            return $this->redirectToRoute('listado_prof');
         } else {
             return $this->render('FctBundle:Profesor:perfil.html.twig', array(
                         "error" => $error,
@@ -72,7 +124,7 @@ class ProfesorController extends Controller {
     public function deleteAction(Request $request, $nif) {
         $salir = false;
         $user = $this->getUser();
-        if ($user->getNif() == $nif) {  
+        if ($user->getNif() == $nif) {
             $this->session->invalidate();
         }
 
@@ -98,12 +150,15 @@ class ProfesorController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         } else {
-            return $this->redirectToRoute('listado');
+            return $this->redirectToRoute('listado_prof');
         }
     }
 
     public function loginAction(Request $request) {
-
+        if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirectToRoute('fct_homepage');
+        } 
+        
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
@@ -117,8 +172,8 @@ class ProfesorController extends Controller {
         }
 
         return $this->render('FctBundle:Profesor:login.html.twig', array(
-                    "error" => $error,
-                    "last_username" => $last_username
+            "error" => $error,
+            "last_username" => $last_username
         ));
     }
 
@@ -187,16 +242,89 @@ class ProfesorController extends Controller {
         }
         if ($isValid) {
             return $this->render('FctBundle:Default:index.html.twig', array(
-                        "error" => $error,
-                        "last_username" => $last_username
+                "error" => $error,
+                "last_username" => $last_username
             ));
         } else {
             return $this->render('FctBundle:Profesor:registro.html.twig', array(
-                        "error" => $error,
-                        "last_username" => $last_username,
-                        "form" => $form->createView()
+                "error" => $error,
+                "last_username" => $last_username,
+                "form" => $form->createView()
             ));
         }
     }
+    
+    /**
+     * Genera un numero de profesores de prueba
+     * con nombre de usuario y contraseña idénticos.
+     * También borra los usuarios de prueba anteriores.
+     * @param int $numero
+     */
+    public function generar_profesores($numero) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        
+        $qb->select('p.nif')
+            ->from('FctBundle\Entity\Profesor', 'p')
+            ->where($qb->expr()->like('p.nuser', "'%user%'"));
+        
+        $query = $qb->getQuery();
+        $results = $query->getResult();
+        
+        $profesor_repo = $em->getRepository("FctBundle:Profesor");
+        
+        for($i = 0;$i < count($results);$i++){
+            $profesor = $profesor_repo->findOneBy(array("nif" => $results[$i]["nif"]));
+            $em->remove($profesor);
+        }
+        $flush = $em->flush();
+        
+        for($i = 0;$i < $numero;$i++){
+            $profesor = new Profesor();
+            $profesor->setNif($i);
+            $profesor->setNombre("user".$i);
+            $profesor->setApe1("user".$i);
+            $profesor->setApe2("user".$i);
+            $profesor->setNuser("user".$i);
 
+            $factory = $this->get("security.encoder_factory");
+            $encoder = $factory->getEncoder($profesor);
+            $password = $encoder->encodePassword("user".$i, $profesor->getSalt());
+
+            $profesor->setPass($password);
+
+            $profesor->setTlf($i);
+            $profesor->setMail("user".$i."@gmail.com");
+            $profesor->setRole("ROLE_USER");
+            $profesor->setImg(null);
+
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($profesor);
+            $flush = $em->flush();
+        }
+    }
+    
+    /**
+     * Borra todos los profesores de la base de datos excepto
+     * los que posean el rol SUPER_ADMIN
+     */
+    public function borrar_profesores() {
+        $em = $this->getDoctrine()->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        
+        $qb->select('p.nif')
+            ->from('FctBundle\Entity\Profesor', 'p')
+            ->where("p.role != 'ROLE_SUPER_ADMIN'");
+        
+        $query = $qb->getQuery();
+        $results = $query->getResult();
+        
+        $profesor_repo = $em->getRepository("FctBundle:Profesor");
+        
+        for($i = 0;$i < count($results);$i++){
+            $profesor = $profesor_repo->findOneBy(array("nif" => $results[$i]["nif"]));
+            $em->remove($profesor);
+        }
+        $flush = $em->flush();
+    }
 }

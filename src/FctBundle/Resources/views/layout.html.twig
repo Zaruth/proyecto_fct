@@ -29,40 +29,38 @@
                                 </li>
                                 <li class="nav-item dropdown">
                                     <span style="font-size:20px;">
-                                    <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Profesores
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Profesores
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
                                             <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
-                                    </div>
+                                        </div>
                                     </span>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <span style="font-size:20px;">
-                                    <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Alumnos
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
-                                            <a class="dropdown-item" href="#"><i class="far fa-question-circle"></i> Ayuda </a>
-                                            <a class="dropdown-item" href="{{path("logout")}}"><i class="far fa-times-circle"></i> Salir</a>
-                                            <a class="dropdown-item" href="{{path("login")}}"><i class="fas fa-sign-in-alt"></i> Entrar</a>
-                                            <a class="dropdown-item" href="{{path("registro")}}"><i class="far fa-plus-square"></i> Registrarse </a>
-                                            <a class="dropdown-item" href="#"><i class="far fa-question-circle"></i> Ayuda </a>
-                                    </div>
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Alumnos
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
+                                            <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
+                                            {% if app.user.role != 'ROLE_USER' %}
+                                                <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="far fa-plus-square"></i> Agregar </a>
+                                            {% endif %}
+                                        </div>
                                     </span>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <span style="font-size:20px;">
-                                    <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Empresas
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
-                                            <a class="dropdown-item" href="#"><i class="far fa-question-circle"></i> Ayuda </a>
-                                            <a class="dropdown-item" href="{{path("logout")}}"><i class="far fa-times-circle"></i> Salir</a>
-                                            <a class="dropdown-item" href="{{path("login")}}"><i class="fas fa-sign-in-alt"></i> Entrar</a>
-                                            <a class="dropdown-item" href="{{path("registro")}}"><i class="far fa-plus-square"></i> Registrarse </a>
-                                            <a class="dropdown-item" href="#"><i class="far fa-question-circle"></i> Ayuda </a>
-                                    </div>
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Empresas
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
+                                            <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
+                                            {% if app.user.role != 'ROLE_USER' %}
+                                                <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="far fa-plus-square"></i> Agregar </a>
+                                            {% endif %}
+                                        </div>
                                     </span>
                                 </li>
                             {% endif %}
@@ -71,26 +69,29 @@
                     <ul class="navbar-nav my-2 my-lg-0">
                         <li>
                             <a class="nav-link" href="#">
-                            {% if app.user != null %}
-                               Bienvenido, {{app.user.nombre}} {{app.user.ape1}}
-                            {% endif %}
+                                {% if app.user != null %}
+                                    Bienvenido, {{app.user.nombre}} {{app.user.ape1}}
+                                {% endif %}
                             </a>
                         </li>
                         <li class="nav-item dropdown">
                             <span style="font-size:20px;">
-                            <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-cogs"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
-                                {% if app.user != null %}
-                                    <a class="dropdown-item" href="#"><i class="far fa-question-circle"></i> Ayuda </a>
-                                    <a class="dropdown-item" href="{{path("logout")}}"><i class="far fa-times-circle"></i> Salir</a>
-                                {% else %}
-                                    <a class="dropdown-item" href="{{path("login")}}"><i class="fas fa-sign-in-alt"></i> Entrar</a>
-                                    <a class="dropdown-item" href="{{path("registro")}}"><i class="far fa-plus-square"></i> Registrarse </a>
-                                    <a class="dropdown-item" href="#"><i class="far fa-question-circle"></i> Ayuda </a>
-                                {% endif %}
-                            </div>
+                                <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-cogs"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
+                                    {% if app.user != null %}
+                                        <a class="dropdown-item" href="#"><i class="far fa-question-circle"></i> Ayuda </a>
+                                        {% if app.user.role == 'ROLE_SUPER_ADMIN' %}
+                                            <a class="dropdown-item" href="{{path("panel_maestro")}}"><i class="fas fa-desktop"></i> Panel de Administración </a>
+                                        {% endif %}
+                                        <a class="dropdown-item" href="{{path("logout")}}"><i class="far fa-times-circle"></i> Salir</a>
+                                    {% else %}
+                                        <a class="dropdown-item" href="{{path("login")}}"><i class="fas fa-sign-in-alt"></i> Entrar</a>
+                                        <a class="dropdown-item" href="{{path("registro")}}"><i class="far fa-plus-square"></i> Registrarse </a>
+                                        <a class="dropdown-item" href="#"><i class="far fa-question-circle"></i> Ayuda </a>
+                                    {% endif %}
+                                </div>
                             </span>
                         </li>
                     </ul>

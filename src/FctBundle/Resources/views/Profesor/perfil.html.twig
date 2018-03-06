@@ -4,18 +4,6 @@
     <br/>
     <center>
         <div class="text-center col-lg-4 jumbotron" style="max-width: 600px;">
-            {# if is_granted('ROLE_USER') %}
-                <strong>
-                    Eres un user normal
-                </strong>
-            {% endif %}
-    
-            {% if is_granted('ROLE_ADMIN') %}
-                <strong>
-                    Eres un admin to flama
-                </strong>
-            {% endif #}
-
 
             {% for class in app.session.flashbag().get('class') %}
                 <div class="alert {{ class }}">
@@ -123,8 +111,10 @@
                 </tbody>
             </table>
             <a href="{{path("listado_prof")}}"><button class="btn btn-success">Listado</button></a> <a href="{{path("fct_homepage")}}"><button class="btn btn-success">Inicio</button></a>
-            {% if app.user.role == "ROLE_ADMIN" or app.user.role == "ROLE_SUPER_ADMIN" or usuario.nif == app.user.nif %}
-                <a href="#"><button class="btn btn-warning">Modificar</button></a> 
+            {% if usuario.nif == app.user.nif or ((app.user.role == "ROLE_ADMIN" or app.user.role == "ROLE_SUPER_ADMIN" ) and usuario.role != 'ROLE_SUPER_ADMIN') %}
+                <a href="#"><button class="btn btn-warning">Modificar</button></a>
+            {% endif %}
+            {% if (usuario.nif == app.user.nif and usuario.role != 'ROLE_SUPER_ADMIN') or (usuario.nif != app.user.nif and (app.user.role != 'ROLE_USER') and usuario.role != 'ROLE_SUPER_ADMIN') %}
                 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
                     <i class="fa fa-trash" aria-hidden="true"></i>  
                     Borrar
@@ -136,7 +126,7 @@
                                     <h4 class="modal-title">Confirmar borrado</h4><button type="button" class="close" data-dismiss="modal">&times;</button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>¿Está seguro que desea eliminar el perfil de <strong>'<?php echo $fila['NOMBRE'].' '.$fila['APELLIDO1']; ?>'</strong>?<br> Esta acción no puede deshacerse.</p>
+                                    <p>¿Está seguro que desea eliminar el perfil de <strong>'{{usuario.nombre}} {{usuario.ape1}} {{usuario.ape2}}'</strong>?<br> Esta acción no puede deshacerse.</p>
                                     <center>
                                         <input type="hidden" name="id" value="">
                                         <a href="{{path("delete_prof")}}/{{usuario.nif}}"><button type="submit" id="submit" name="deleteUser" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">Borrar perfil</button></a>

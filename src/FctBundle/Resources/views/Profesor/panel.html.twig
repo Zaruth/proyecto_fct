@@ -1,0 +1,72 @@
+{% extends "FctBundle::layout.html.twig" %}
+
+{% block content %}
+    <div class="text-center">
+        <br>
+        <center>
+            {% for class in app.session.flashbag().get('class') %}
+                <div class="col-lg-4">
+                    <div class="alert {{ class }}">
+                        {% for message in app.session.flashbag().get('status') %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="text-left jumbotron" style="max-width:700px">
+                <center><h1>Panel maestro</h1></center>
+                <p>Desde el panel maestro puedes realizar distintas funciones básicas como rellenar con datos de prueba la base de datos o vaciarla.</p>
+                <br>
+                <table>
+                    <tr>
+                        <td><p class="form-control-static h4">Generar usuarios de prueba</p></td>
+                        <td align="center"><input id="campo_gen_user" class="form-control col-sm-4" type="number" min="1" max="99" step="1" value="1"></td>
+                        <td align="center"><a id="gen_user_link" href="{{path("funcion_panel")}}/1/1"><button id="gen_user" type="submit" class="btn btn-info">Generar</button></a></td>
+                    </tr>
+                    <tr><td colspan="3"><hr></td></tr>
+                    <tr>
+                        <td><p class="form-control-static h4">Borrar profesores base de datos</p></td>
+                        <td align="center">(Exepto usuarios con rol: "ROLE_SUPER_ADMIN")</td>
+                        <td align="center">
+                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
+                                <i class="fa fa-trash" aria-hidden="true"></i>  
+                                Borrar
+                            </button>
+                        </td>
+                    </tr>
+                    <tr><td colspan="3"><hr></td></tr>
+                </table>
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Confirmar borrado</h4><button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar la base de datos de profesores?<br><strong>Esta acción no puede deshacerse.</strong></p>
+                                <center>
+                                    <input type="hidden" name="id" value="">
+                                    <a href="{{path("funcion_panel")}}/2"><button type="submit" id="submit" name="deleteUser" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">Borrar usuarios</button></a>
+                                </center>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-arrow-left"></i>Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </center>
+    </div>
+    <script>
+        var value;
+        $(document).ready(function () {
+            value = $("#campo_gen_user").val();
+            $("#gen_user_link").attr("href", '{{path("funcion_panel")}}/1/' + value);
+            $("#campo_gen_user").change(function () {
+                value = $("#campo_gen_user").val();
+                $("#gen_user_link").attr("href", '{{path("funcion_panel")}}/1/' + value);
+            });
+        });
+    </script>
+{% endblock %}
