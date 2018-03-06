@@ -68,25 +68,31 @@ class ProfesorController extends Controller {
         }
     }
 
-    public function listadoAction(Request $request) {
+    public function listadoAction($num_pag, $per_pag) {
 
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
-
+        
         $profesores = new Profesor();
         $em = $this->getDoctrine()->getEntityManager();
         $profesor_repo = $em->getRepository("FctBundle:Profesor");
 
-        $profesores = $profesor_repo->findAll();
-
-        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
+        $profesores = $profesor_repo->getPaginateEntries($num_pag,$per_pag);
+        
+        if ($this->getUser()->getRole() == 'ROLE_USER') {
+            $status = "No tienes acceso.";
+            $class = "alert-danger";
+            $this->session->getFlashBag()->add("class", $class);
+            $this->session->getFlashBag()->add("status", $status);
             return $this->redirectToRoute('fct_homepage');
         } else {
             return $this->render('FctBundle:Profesor:listado.html.twig', array(
                 "error" => $error,
                 "last_username" => $last_username,
-                "usuarios" => $profesores
+                "usuarios" => $profesores,
+                "num_pag" => $num_pag,
+                "per_pag" => $per_pag
             ));
         }
     }

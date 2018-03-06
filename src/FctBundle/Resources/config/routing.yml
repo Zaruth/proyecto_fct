@@ -15,10 +15,10 @@ logout:
 perfil:
     path: /perfil/{nif}
     defaults: { _controller: FctBundle:Profesor:perfil, nif: ~ }
-    
+
 listado_prof:
-    path: /listado_prof
-    defaults: { _controller: FctBundle:Profesor:listado }
+    path: /listado_prof/{num_pag}/{per_pag}
+    defaults: { _controller: FctBundle:Profesor:listado, num_pag:1 , per_pag:5}
 
 delete_prof:
     path: /delete_prof/{nif}
