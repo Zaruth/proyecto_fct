@@ -1,0 +1,80 @@
+{% extends "FctBundle::layout.html.twig" %}
+{% block content %}
+    <br/>
+   <center>
+        <div class="text-center col-lg-4 jumbotron">
+        <h2>Regístro Alumno</h2>
+        <hr/>
+        {{form_start(form, {'action':'', 'method':'POST'})}}
+        <div class="text-left">
+            {% if app.session.flashbag().get('status')|length > 0 %}
+                <div>
+                    {% for class in app.session.flashbag().get('class') %}
+                        <div class="alert {{ class }}">
+                            Tienes los siguientes errores:<br>
+                            {% for message in app.session.flashbag().get('status') %}
+                                <ul>
+                                    <li>{{ message }}</li>
+                                </ul>
+                            {% endfor %}
+                            {{ form_errors(form.nif) }}
+                            {{ form_errors(form.nombre) }}
+                            {{ form_errors(form.ape1) }}
+                            {{ form_errors(form.ape2) }}
+                            {{ form_errors(form.direccion) }}
+                            {{ form_errors(form.poblacion) }}
+                            {{ form_errors(form.cp) }}
+                            {{ form_errors(form.provincia) }}
+                            {{ form_errors(form.tlf) }}
+                            {{ form_errors(form.mail) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form_row">
+                {{ form_label(form.nif) }}
+                {{ form_widget(form.nif) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.nombre) }}
+                {{ form_widget(form.nombre) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.ape1) }}
+                {{ form_widget(form.ape1) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.ape2) }}
+                {{ form_widget(form.ape2) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.direccion) }}
+                {{ form_widget(form.direccion) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.poblacion) }}
+                {{ form_widget(form.poblacion) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.cp) }}
+                {{ form_widget(form.cp) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.provincia) }}
+                {{ form_widget(form.provincia) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.tlf) }}
+                {{ form_widget(form.tlf) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.mail) }}
+                {{ form_widget(form.mail) }}
+            </div>
+            <br>
+                <center>{{ form_widget(form.Crear) }}</center>
+                </div>
+        {{form_end(form)}}
+    </div>
+    <div class="clearfix"></div></center>
+{% endblock %}

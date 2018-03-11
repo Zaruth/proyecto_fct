@@ -5,7 +5,7 @@
         <title>
             {% block title %} Fct Symfony 3.0 {% endblock %}
         </title>
-        <link rel="stylesheet" href="https://bootswatch.com/4/cerulean/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://bootswatch.com/4/slate/bootstrap.min.css"/>
         <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -15,7 +15,7 @@
     <body>
         <header>
             <nav class="navbar navbar-expand-lg navbar-dark bg-dark" >
-                <a class="navbar-brand" href="{{path("fct_homepage")}}" style="font-size:26px;">Inicio</a>
+                <a class="navbar-brand" href="{{path("fct_homepage")}}" style="font-size:26px;"><i class="fas fa-home"></i> Inicio</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -24,13 +24,15 @@
                     <ul class="navbar-nav mr-auto mt-2 mt-lg-0" style="font-size:20px;">
                         {% block menu %}
                             {% if app.user != null %}
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="{{path("perfil")}}/{{app.user.nif}}">Perfil<span class="sr-only">(current)</span></a>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{path("perfil")}}/{{app.user.nif}}" style="color: white;">
+                                        <i class="far fa-address-book"></i> Perfil<span class="sr-only">(current)</span>
+                                    </a>
                                 </li>
                                 <li class="nav-item dropdown">
                                     <span style="font-size:20px;">
                                         <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Profesores
+                                            <i class="fas fa-book"></i> Profesores
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
                                             <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
@@ -40,7 +42,20 @@
                                 <li class="nav-item dropdown">
                                     <span style="font-size:20px;">
                                         <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Alumnos
+                                            <i class="fas fa-child"></i> Alumnos
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
+                                            <a class="dropdown-item" href="{{path("listado_alum")}}"><i class="fas fa-list"></i> Listado </a>
+                                            {% if app.user.role != 'ROLE_USER' %}
+                                                <a class="dropdown-item" href="{{path("reg_alum")}}"><i class="far fa-plus-square"></i> Agregar </a>
+                                            {% endif %}
+                                        </div>
+                                    </span>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <span style="font-size:20px;">
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-briefcase"></i> Empresas
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
                                             <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
@@ -53,7 +68,20 @@
                                 <li class="nav-item dropdown">
                                     <span style="font-size:20px;">
                                         <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Empresas
+                                            <i class="fas fa-sync"></i> Ciclos
+                                        </a>
+                                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
+                                            <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
+                                            {% if app.user.role != 'ROLE_USER' %}
+                                                <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="far fa-plus-square"></i> Agregar </a>
+                                            {% endif %}
+                                        </div>
+                                    </span>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <span style="font-size:20px;">
+                                        <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-building"></i> Fct
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
                                             <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>

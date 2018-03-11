@@ -1,38 +1,65 @@
+#Inicio
+fct_homepage:
+    path: /
+    defaults: { _controller: FctBundle:Default:index }
+
+
+
+#Login
 login:
     path: /login
     defaults: { _controller: FctBundle:Profesor:login }
-    
+#Check del login
+login_check:
+    path: /login_check
+#Logout
+logout:
+    path: /logout
+#Formulario de registro
 registro:
     path: /registro
     defaults: { _controller: FctBundle:Profesor:registro }
 
-login_check:
-    path: /login_check
 
-logout:
-    path: /logout
 
-perfil:
-    path: /perfil/{nif}
-    defaults: { _controller: FctBundle:Profesor:perfil, nif: ~ }
-
-listado_prof:
-    path: /listado_prof/{num_pag}/{per_pag}
-    defaults: { _controller: FctBundle:Profesor:listado, num_pag:1 , per_pag:5}
-
-delete_prof:
-    path: /delete_prof/{nif}
-    defaults: { _controller: FctBundle:Profesor:delete, nif: ~}
-
-fct_homepage:
-    path: /
-    defaults: { _controller: FctBundle:Default:index }
-    
+#Panel maestro
 panel_maestro:
     path: /panel
     defaults: { _controller: FctBundle:Profesor:panel_maestro}
-    
+#Funciones del panel maestro
 funcion_panel:
     path: /panel/{id}/{numero}
     defaults: { _controller: FctBundle:Profesor:funcion_panel, id: ~, numero: ~}
 
+
+
+#Perfil de profesor
+perfil:
+    path: /perfil/{nif}
+    defaults: { _controller: FctBundle:Profesor:perfil, nif: ~ }
+#Listado profesor
+listado_prof:
+    path: /listado_prof/{num_pag}/{per_pag}
+    defaults: { _controller: FctBundle:Profesor:listado, num_pag:1 , per_pag:5}
+#Borrado de profesor
+delete_prof:
+    path: /delete_prof/{nif}
+    defaults: { _controller: FctBundle:Profesor:delete, nif: ~}
+
+
+#Perfil del alumno
+ficha_alum:
+    path: /ficha_alum/{nif}
+    defaults: { _controller: FctBundle:Alumno:ficha, nif: ~ }
+#Listado alumnos
+listado_alum:
+    path: /listado_alum/{num_pag}/{per_pag}
+    defaults: { _controller: FctBundle:Alumno:listado, num_pag:1 , per_pag:5}
+#Registro de alumnos
+reg_alum:
+    path: /reg_alum
+    defaults: { _controller: FctBundle:Alumno:registro }
+#Borrado de profesor
+delete_alum:
+    path: /delete_alum/{nif}
+    defaults: { _controller: FctBundle:Alumno:delete, nif: ~}

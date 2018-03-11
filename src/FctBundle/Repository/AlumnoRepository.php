@@ -1,6 +1,8 @@
 <?php
 
 namespace FctBundle\Repository;
+use FctBundle\Entity\Alumno;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
  * AlumnoRepository
@@ -10,4 +12,17 @@ namespace FctBundle\Repository;
  */
 class AlumnoRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function getPaginateEntries($currentPage=1,$pageSize=5){
+        $em = $this->getEntityManager();
+        
+        $dql = "SELECT p FROM FctBundle\Entity\Alumno p ORDER BY p.id ASC";
+        
+        $query = $em->createQuery($dql)
+                ->setFirstResult($pageSize*($currentPage - 1))
+                ->setMaxResults($pageSize);
+        
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+    
+        return $paginator;
+    }
 }

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use FctBundle\Entity\Profesor;
+use FctBundle\Entity\Alumno;
 use FctBundle\Form\ProfesorType;
 
 class ProfesorController extends Controller {
@@ -49,8 +50,18 @@ class ProfesorController extends Controller {
                     $class = "alert-success";
                     break;
                 case 3:
+                    $this->generar_alumnos($numero);
+                    $status = "Datos de prueba generados.";
+                    $class = "alert-success";
+                    break;
+                case 4:
+                    $this->borrar_alumnos();
+                    $status = "Datos borrados con éxito.";
+                    $class = "alert-success";
                     break;
                 default:
+                    $status = "Error inesperado.";
+                    $class = "alert-danger";
                     break;
             }
         }
@@ -69,7 +80,9 @@ class ProfesorController extends Controller {
     }
 
     public function listadoAction($num_pag, $per_pag) {
-
+        if($num_pag < 1){
+            $num_pag = 1;
+        }
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
@@ -78,9 +91,22 @@ class ProfesorController extends Controller {
         $em = $this->getDoctrine()->getEntityManager();
         $profesor_repo = $em->getRepository("FctBundle:Profesor");
 
+        
         $profesores = $profesor_repo->getPaginateEntries($num_pag,$per_pag);
         
-        if ($this->getUser()->getRole() == 'ROLE_USER') {
+        $totalitems = count($profesores);
+        $pageCount = ceil($totalitems/$per_pag);
+        
+        if($num_pag > $pageCount){
+            $num_pag = $pageCount;
+            $profesores = $profesor_repo->getPaginateEntries($num_pag,$per_pag);
+        }
+        
+        $totalitems = count($profesores);
+        $pageCount = ceil($totalitems/$per_pag);
+        
+        
+        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $status = "No tienes acceso.";
             $class = "alert-danger";
             $this->session->getFlashBag()->add("class", $class);
@@ -92,7 +118,8 @@ class ProfesorController extends Controller {
                 "last_username" => $last_username,
                 "usuarios" => $profesores,
                 "num_pag" => $num_pag,
-                "per_pag" => $per_pag
+                "per_pag" => $per_pag,
+                "pageCount" => $pageCount
             ));
         }
     }
@@ -287,7 +314,7 @@ class ProfesorController extends Controller {
         
         for($i = 0;$i < $numero;$i++){
             $profesor = new Profesor();
-            $profesor->setNif($i);
+            $profesor->setNif("user".$i);
             $profesor->setNombre("user".$i);
             $profesor->setApe1("user".$i);
             $profesor->setApe2("user".$i);
@@ -299,15 +326,54 @@ class ProfesorController extends Controller {
 
             $profesor->setPass($password);
 
-            $profesor->setTlf($i);
+            $profesor->setTlf(700700700);
             $profesor->setMail("user".$i."@gmail.com");
             $profesor->setRole("ROLE_USER");
             $profesor->setImg(null);
 
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($profesor);
-            $flush = $em->flush();
         }
+        $flush = $em->flush();
+    }
+    
+    public function generar_alumnos($numero) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        
+        $qb->select('a.nif')
+            ->from('FctBundle\Entity\Alumno', 'a')
+            ->where($qb->expr()->like('a.nif', "'%alum%'"));
+        
+        $query = $qb->getQuery();
+        $results = $query->getResult();
+        
+        $alumno_repo = $em->getRepository("FctBundle:Alumno");
+        
+        for($i = 0;$i < count($results);$i++){
+            $alumno = $alumno_repo->findOneBy(array("nif" => $results[$i]["nif"]));
+            $em->remove($alumno);
+        }
+        $flush = $em->flush();
+        
+        for($i = 0;$i < $numero;$i++){
+            $alumno = new Alumno();
+            $alumno->setNif("alum".$i);
+            $alumno->setNombre("alum".$i);
+            $alumno->setApe1("alum".$i);
+            $alumno->setApe2("alum".$i);
+            $alumno->setImg(null);
+            $alumno->setDireccion("alum".$i);
+            $alumno->setPoblacion("alum".$i);
+            $alumno->setCp(20007);
+            $alumno->setProvincia("alum".$i);
+            $alumno->setTlf(600600600);
+            $alumno->setMail("alum".$i."@gmail.com");
+            
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->persist($alumno);
+        }
+        $flush = $em->flush();
     }
     
     /**
@@ -330,6 +396,25 @@ class ProfesorController extends Controller {
         for($i = 0;$i < count($results);$i++){
             $profesor = $profesor_repo->findOneBy(array("nif" => $results[$i]["nif"]));
             $em->remove($profesor);
+        }
+        $flush = $em->flush();
+    }
+    
+    public function borrar_alumnos() {
+        $em = $this->getDoctrine()->getEntityManager();
+        $qb = $em->createQueryBuilder();
+        
+        $qb->select('a.nif')
+            ->from('FctBundle\Entity\Alumno', 'a');
+        
+        $query = $qb->getQuery();
+        $results = $query->getResult();
+        
+        $alumno_repo = $em->getRepository("FctBundle:Alumno");
+        
+        for($i = 0;$i < count($results);$i++){
+            $alumno = $alumno_repo->findOneBy(array("nif" => $results[$i]["nif"]));
+            $em->remove($alumno);
         }
         $flush = $em->flush();
     }
