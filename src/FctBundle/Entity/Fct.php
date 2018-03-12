@@ -85,5 +85,77 @@ class Fct
     {
         return $this->anyo;
     }
+    
+    /**
+     * Set alumno
+     *
+     * @param Alumno $alumno
+     *
+     * @return Fct
+     */
+    public function setAlumno($alumno)
+    {
+        $this->alumno = $alumno;
+
+        return $this;
+    }
+
+    /**
+     * Get alumno
+     *
+     * @return Alumno
+     */
+    public function getAlumno()
+    {
+        return $this->alumno;
+    }
+    
+    /**
+     * Set profesor
+     *
+     * @param Profesor $profesor
+     *
+     * @return Fct
+     */
+    public function setProfesor($profesor)
+    {
+        $this->profesor = $profesor;
+
+        return $this;
+    }
+
+    /**
+     * Get profesor
+     *
+     * @return Profesor
+     */
+    public function getProfesor()
+    {
+        return $this->profesor;
+    }
+    
+    /**
+     * Set empresa
+     *
+     * @param Empresa $empresa
+     *
+     * @return Fct
+     */
+    public function setEmpresa($empresa)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return Empresa
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
+    }
 }
 

@@ -1,0 +1,111 @@
+{% extends "FctBundle::layout.html.twig" %}
+
+{% block content %}
+    <br/>
+    <center>
+        <div class="text-center col-lg-4 jumbotron" style="max-width: 800px;">
+            {% for class in app.session.flashbag().get('class') %}
+                <div class="alert {{ class }}">
+                    {% for message in app.session.flashbag().get('status') %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <table class="table" align="center" style="max-width: 650px;">
+                <thead>
+                    <tr>
+                        <th colspan="5" style="color:white;"><h1><i class="fas fa-building"></i> Fct</h1></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-active">
+                        <td colspan="5">
+                            <div align="right" style="width: 100%">
+                                <div style="width: 210px;">
+                                    <form class="form-inline">
+                                        <label class="mr-sm-2 text-dark font-weight-bold">Nº de entradas:</label>
+                                        <select class="form-control mb-2 mr-sm-2 mb-sm-0" onchange="window.location.href = '{{path("listado_fct")}}/' +    {{num_pag}} +'/' + $(this).val();">
+                                            <option value="5" {% if per_pag == 5%}selected="selected"{% endif %}>5</option>
+                                            <option value="10" {% if per_pag == 10%}selected="selected"{% endif %}>10</option>
+                                            <option value="15" {% if per_pag == 15%}selected="selected"{% endif %}>15</option>
+                                            <option value="20" {% if per_pag == 20%}selected="selected"{% endif %}>20</option>
+                                        </select> 
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% for fila in filas %}
+                        <tr class="text-left">
+                            <td>{{fila.alumno.ciclo.abr}}</td>
+                            <td>{{fila.alumno.nombre}}<br>{{fila.alumno.ape1}} {{fila.alumno.ape2}}</td>
+                            <td>{{fila.profesor.nombre}}<br>{{fila.profesor.ape1}} {{fila.profesor.ape2}}</td>
+                            <td>{{fila.empresa.nombre}}<br>Tutor: {{fila.empresa.tutorLaboral}}<br>{{fila.empresa.tlf}}<br>{{fila.empresa.mail}}</td>
+                                {% if app.user.role != 'ROLE_USER' %}
+                                <td>Opciones: <button onclick="$('#{{fila.id}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
+                                    {% endif %}
+                        </tr>
+                        {% if app.user.role != 'ROLE_USER' %}
+                            <tr id="{{fila.id}}" style="display: none;" class="table-light">
+                                <td colspan="5" class="table-light" style="color: black;">
+                                    <a href="#"><button class="btn btn-warning">Modificar</button></a>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
+                                        <i class="fa fa-trash" aria-hidden="true"></i>  
+                                        Borrar
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    <tr class="table-active">
+                        <td colspan="5">
+                            <div style="width: 100%;">
+                                <span style="margin:auto; display:table;">
+                                    <div class="form-group form-inline">
+                                        <a href="{{path("listado_fct")}}/1/{{per_pag}}">
+                                            <button><i class="fas fa-angle-double-left"></i></button>
+                                        </a>
+
+                                        {% set num_menor = num_pag - 1 %}
+                                        {%if num_menor >= 1%}
+                                            <a href="{{path("listado_fct")}}/{{num_menor}}/{{per_pag}}">
+                                                <button><i class="fas fa-angle-left"></i></button>
+                                            </a>
+                                        {%else%}
+                                            <a href="{{path("listado_fct")}}/1/{{per_pag}}">
+                                                <button><i class="fas fa-angle-left"></i></button>
+                                            </a>
+                                        {%endif%}
+
+                                        &nbsp;<div class="input-group">
+                                            <input id="input_pag" class="form-control text-center" type="text" size="1" value="{{num_pag}}">
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">de&nbsp;<strong>{{pageCount}}</strong></span>
+                                            </div>
+                                        </div>&nbsp;
+
+                                        {% set num_mayor = num_pag + 1 %}
+                                        {%if num_mayor <= pageCount%}
+                                            <a href="{{path("listado_fct")}}/{{num_mayor}}/{{per_pag}}">
+                                                <button><i class="fas fa-angle-right"></i></button>
+                                            </a>
+                                        {%else%}
+                                            <a href="{{path("listado_fct")}}/{{pageCount}}/{{per_pag}}">
+                                                <button><i class="fas fa-angle-right"></i></button>
+                                            </a>
+                                        {%endif%}
+
+                                        <a href="{{path("listado_fct")}}/{{pageCount}}/{{per_pag}}">
+                                            <button><i class="fas fa-angle-double-right"></i></button>
+                                        </a>
+                                    </div>
+                                    <button onclick="window.location.href = '{{path("listado_fct")}}/' + $('#input_pag').val() + '/{{per_pag}}';">Ir a pag <i class="far fa-arrow-alt-circle-right"></i></button>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </center>
+{% endblock %}

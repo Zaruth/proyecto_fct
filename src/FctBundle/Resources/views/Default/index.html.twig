@@ -17,6 +17,14 @@
             <div class="text-left jumbotron" style="max-width:700px">
                 <center><h1>Bienvenido</h1></center>
                 <p>Esta es la página principal de la aplicación.<br>
+                <p>Datos de conexión:<br><ul>
+                    {% if result["ResolveIPResult"]["Latitude"] != 0 %}
+                        <li>País: {{result["ResolveIPResult"]["Country"]}}</li>
+                        <li>Geoposición: Latitud({{result["ResolveIPResult"]["Latitude"]}}),Longitud({{result["ResolveIPResult"]["Longitude"]}})</li>
+                    {% else %}
+                       <li> ERROR - Sin datos</li>
+                    {% endif %}
+                </ul></p>
                     {% if app.user == null %}
                         Haz click en la rueda superior derecha si deseas entrar o registrarte en la aplicación.
                 {% endif %}<p>
