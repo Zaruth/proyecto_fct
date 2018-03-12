@@ -7,6 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use FctBundle\Entity\Alumno;
 use FctBundle\Form\AlumnoType;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\HttpFoundation\Response;
 
 class AlumnoController extends Controller
 {
@@ -188,5 +193,24 @@ class AlumnoController extends Controller
                 "form" => $form->createView()
             ));
         }
+    }
+    
+    public function serializadorAction(){
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);
+        
+        $alumno = new Alumno();
+        $em = $this->getDoctrine()->getEntityManager();
+        $alumno_repo = $em->getRepository("FctBundle:Alumno");
+        
+        $alumno = $alumno_repo->findAll();
+
+        $xmlcontent = $serializer->serialize($alumno, 'xml');
+        
+        return $this->render('FctBundle:Fct:datos_sacados.xml.twig', array(
+                "xmlcontent" => $xmlcontent,
+            ));
     }
 }

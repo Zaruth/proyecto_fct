@@ -7,6 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use FctBundle\Entity\Empresa;
 use FctBundle\Form\EmpresaType;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\HttpFoundation\Response;
 
 class EmpresaController extends Controller
 {
@@ -180,5 +185,24 @@ class EmpresaController extends Controller
                 "form" => $form->createView()
             ));
         }
+    }
+    
+    public function serializadorAction(){
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);
+        
+        $empresa = new Empresa();
+        $em = $this->getDoctrine()->getEntityManager();
+        $empresa_repo = $em->getRepository("FctBundle:Empresa");
+        
+        $empresa = $empresa_repo->findAll();
+
+        $xmlcontent = $serializer->serialize($empresa, 'xml');
+        
+        return $this->render('FctBundle:Fct:datos_sacados.xml.twig', array(
+                "xmlcontent" => $xmlcontent,
+            ));
     }
 }

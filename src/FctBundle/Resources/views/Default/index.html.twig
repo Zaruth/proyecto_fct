@@ -20,7 +20,7 @@
                 <p>Datos de conexión:<br><ul>
                     {% if latitud != 0 %}
                         <li>País: {{pais}}</li>
-                        <li>Geoposición: Latitud({{latitud}}),Longitud({{longitud}})</li>
+                        <li>Geoposición: Latitud({{latitud}}),Longitud({{longitud}}) <a class="text-info" href="https://www.google.com/maps/?q={{latitud}},{{longitud}}">Link</a></li>
                     {% else %}
                        <li> ERROR - Sin datos</li>
                     {% endif %}

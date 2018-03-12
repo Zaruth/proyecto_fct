@@ -8,6 +8,11 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use FctBundle\Entity\Profesor;
 use FctBundle\Entity\Alumno;
 use FctBundle\Form\ProfesorType;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProfesorController extends Controller {
 
@@ -417,5 +422,24 @@ class ProfesorController extends Controller {
             $em->remove($alumno);
         }
         $flush = $em->flush();
+    }
+    
+    public function serializadorAction(){
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+
+        $serializer = new Serializer($normalizers, $encoders);
+        
+        $profesores = new Profesor();
+        $em = $this->getDoctrine()->getEntityManager();
+        $profesor_repo = $em->getRepository("FctBundle:Profesor");
+        
+        $profesores = $profesor_repo->findAll();
+
+        $xmlcontent = $serializer->serialize($profesores, 'xml');
+        
+        return $this->render('FctBundle:Profesor:datos_sacados.xml.twig', array(
+                "xmlcontent" => $xmlcontent,
+            ));
     }
 }

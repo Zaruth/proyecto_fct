@@ -50,7 +50,8 @@ class DefaultController extends Controller {
             $ip = $_SERVER['REMOTE_ADDR'];
         }
         
-        $ip = "78.136.117.23";
+        //Oculta la linea de abajo. Es para testear.
+        $ip = "84.127.252.103";
         
         $result = $client->call('ResolveIP', array("ipAddress" => $ip, "licenseKey" => "0"));
         return $result;

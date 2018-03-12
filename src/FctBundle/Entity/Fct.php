@@ -50,6 +50,13 @@ class Fct
      * @ORM\Column(name="anyo", type="date")
      */
     private $anyo;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="periodo", type="string", length=30)
+     */
+    private $periodo;
 
 
     /**
@@ -156,6 +163,30 @@ class Fct
     public function getEmpresa()
     {
         return $this->empresa;
+    }
+    
+    /**
+     * Set periodo
+     *
+     * @param string $periodo
+     *
+     * @return Fct
+     */
+    public function setPeriodo($periodo)
+    {
+        $this->periodo = $periodo;
+
+        return $this;
+    }
+
+    /**
+     * Get periodo
+     *
+     * @return string
+     */
+    public function getPeriodo()
+    {
+        return $this->periodo;
     }
 }
 

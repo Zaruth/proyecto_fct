@@ -36,6 +36,7 @@
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
                                             <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
+                                            <a class="dropdown-item" href="{{path("serializador_profesor")}}"><i class="far fa-file-alt"></i> Datos - XML</a>
                                         </div>
                                     </span>
                                 </li>
@@ -49,6 +50,7 @@
                                             {% if app.user.role != 'ROLE_USER' %}
                                                 <a class="dropdown-item" href="{{path("reg_alum")}}"><i class="far fa-plus-square"></i> Agregar </a>
                                             {% endif %}
+                                            <a class="dropdown-item" href="{{path("serializador_alumno")}}"><i class="far fa-file-alt"></i> Datos - XML</a>
                                         </div>
                                     </span>
                                 </li>
@@ -62,6 +64,7 @@
                                             {% if app.user.role != 'ROLE_USER' %}
                                                 <a class="dropdown-item" href="{{path("reg_emp")}}"><i class="far fa-plus-square"></i> Agregar </a>
                                             {% endif %}
+                                            <a class="dropdown-item" href="{{path("serializador_empresa")}}"><i class="far fa-file-alt"></i> Datos - XML</a>
                                         </div>
                                     </span>
                                 </li>
@@ -75,6 +78,7 @@
                                             {% if app.user.role != 'ROLE_USER' %}
                                                 <a class="dropdown-item" href="{{path("reg_ciclo")}}"><i class="far fa-plus-square"></i> Agregar </a>
                                             {% endif %}
+                                            <a class="dropdown-item" href="{{path("serializador_ciclo")}}"><i class="far fa-file-alt"></i> Datos - XML</a>
                                         </div>
                                     </span>
                                 </li>
@@ -86,8 +90,9 @@
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
                                             <a class="dropdown-item" href="{{path("listado_fct")}}"><i class="fas fa-list"></i> Listado </a>
                                             {% if app.user.role != 'ROLE_USER' %}
-                                                <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="far fa-plus-square"></i> Agregar </a>
+                                                <a class="dropdown-item" href="{{path("reg_fct")}}"><i class="far fa-plus-square"></i> Agregar </a>
                                             {% endif %}
+                                            <a class="dropdown-item" href="{{path("serializador_fct")}}"><i class="far fa-file-alt"></i> Datos - XML</a>
                                         </div>
                                     </span>
                                 </li>

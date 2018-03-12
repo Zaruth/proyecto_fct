@@ -2,6 +2,27 @@
 fct_homepage:
     path: /
     defaults: { _controller: FctBundle:Default:index }
+    
+#XML profesor
+serializador_profesor:
+    path: /serializador/profesor
+    defaults: { _controller: FctBundle:Profesor:serializador }
+#XML alumno
+serializador_alumno:
+    path: /serializador/alumno
+    defaults: { _controller: FctBundle:Alumno:serializador }
+#XML ciclo
+serializador_ciclo:
+    path: /serializador/ciclo
+    defaults: { _controller: FctBundle:Ciclo:serializador }
+#XML empresa
+serializador_empresa:
+    path: /serializador/empresa
+    defaults: { _controller: FctBundle:Empresa:serializador }
+#XML fct
+serializador_fct:
+    path: /serializador/fct
+    defaults: { _controller: FctBundle:Fct:serializador }
 
 
 
@@ -110,3 +131,11 @@ delete_ciclo:
 listado_fct:
     path: /listado_fct/{num_pag}/{per_pag}
     defaults: { _controller: FctBundle:Fct:listado, num_pag:1 , per_pag:5}
+#Registro de Ciclo
+reg_fct:
+    path: /reg_fct
+    defaults: { _controller: FctBundle:Fct:registro }
+#Borrado de Ciclo
+delete_fct:
+    path: /delete_fct/{id}
+    defaults: { _controller: FctBundle:Fct:delete, id: ~}

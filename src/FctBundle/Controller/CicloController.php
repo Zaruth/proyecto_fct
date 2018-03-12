@@ -10,6 +10,11 @@ use FctBundle\Entity\Ciclo;
 use FctBundle\Entity\Alumno;
 use FctBundle\Entity\Profesor;
 use FctBundle\Form\CicloType;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\HttpFoundation\Response;
 
 class CicloController extends Controller {
 
@@ -179,7 +184,6 @@ class CicloController extends Controller {
             $ciclo->setGrado($form->get("grado")->getData());
             $ciclo->setHoras($form->get("horas")->getData());
             $ciclo->setNombre($form->get("nombre")->getData());
-            $ciclo->setPeriodo($form->get("periodo")->getData());
 
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($ciclo);
@@ -208,5 +212,23 @@ class CicloController extends Controller {
             return $this->redirectToRoute('listado_ciclo');
         }
     }
+    
+    public function serializadorAction(){
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
 
+        $serializer = new Serializer($normalizers, $encoders);
+        
+        $ciclo = new Ciclo();
+        $em = $this->getDoctrine()->getEntityManager();
+        $ciclo_repo = $em->getRepository("FctBundle:Ciclo");
+        
+        $ciclo = $ciclo_repo->findAll();
+
+        $xmlcontent = $serializer->serialize($ciclo, 'xml');
+        
+        return $this->render('FctBundle:Fct:datos_sacados.xml.twig', array(
+                "xmlcontent" => $xmlcontent,
+            ));
+    }
 }

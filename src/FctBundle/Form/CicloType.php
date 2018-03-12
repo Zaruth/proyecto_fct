@@ -36,13 +36,6 @@ class CicloType extends AbstractType
                     'Superior' => 'Superior',
                     'Medio' => 'Medio',
                 )))
-            ->add('periodo', ChoiceType::class, array("label"=>"Periodo","required"=>"required","attr" =>array(
-                "class" => "form-control"),
-                'choices'  => array(
-                    'Abril' => 'Abril',
-                    'Septiembre' => 'Septiembre',
-                    'Enero' => 'Enero',
-                )))
             ->add('horas',TextType::class, array("label"=>"Horas","required"=>"required","attr" =>array(
                 "class" => "form-name form-control",
                 "maxlength"=>"11",

@@ -11,7 +11,12 @@ use FctBundle\Entity\Alumno;
 use FctBundle\Entity\Profesor;
 use FctBundle\Entity\Empresa;
 use FctBundle\Entity\Fct;
-use FctBundle\Form\CicloType;
+use FctBundle\Form\FctType;
+use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\HttpFoundation\Response;
 
 class FctController extends Controller {
 
@@ -65,74 +70,22 @@ class FctController extends Controller {
             ));
         }
     }
-    /*
-    public function fichaAction(Request $request, $id) {
-
-        $authenticationUtils = $this->get("security.authentication_utils");
-        $error = $authenticationUtils->getLastAuthenticationError();
-        $last_username = $authenticationUtils->getLastUsername();
-
-        $ciclo = new Ciclo();
-
-        $em = $this->getDoctrine()->getEntityManager();
-        $ciclo_repo = $em->getRepository("FctBundle:Ciclo");
-
-        $ciclo = $ciclo_repo->findOneBy(array("id" => $id));
-
-        $alumno_repo = $em->getRepository("FctBundle:Alumno");
-        $num_alumnos = count($alumno_repo->findBy(array("ciclo" => $id)));
-
-
-        if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirectToRoute('fct_homepage');
-        } else {
-            if (count($ciclo) == 0) {
-                $status = "No existe ese ciclo :(";
-                $class = "alert-danger";
-                $this->session->getFlashBag()->add("class", $class);
-                $this->session->getFlashBag()->add("status", $status);
-                return $this->redirectToRoute('listado_ciclo');
-            } else {
-                return $this->render('FctBundle:Ciclo:perfil.html.twig', array(
-                            "error" => $error,
-                            "last_username" => $last_username,
-                            "usuario" => $ciclo,
-                            "num_alumnos" => $num_alumnos
-                ));
-            }
-        }
-    }
 
     public function deleteAction(Request $request, $id) {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
 
-        $ciclo = new Ciclo();
-        $alumnos = new Alumno();
-        $profesores = new Profesor();
+        $fct = new Fct();
 
         $em = $this->getDoctrine()->getEntityManager();
-        $ciclo_repo = $em->getRepository("FctBundle:Ciclo");
-        $alumno_repo = $em->getRepository("FctBundle:Alumno");
-        $profesor_repo = $em->getRepository("FctBundle:Profesor");
+        $fct_repo = $em->getRepository("FctBundle:Fct");
         
-        $ciclo = $ciclo_repo->findOneBy(array("id" => $id));
-        $alumnos = $alumno_repo->findBy(array("ciclo" => $id));
-        $profesores = $profesor_repo->findAll();
-        
-        foreach ($alumnos as $alumno){
-            $alumno->setCiclo(null);
-        }
-        
-        foreach ($profesores as $profesor){
-            $profesor->getCiclos()->removeElement($ciclo);
-        }
-
-        $em->remove($ciclo);
+        $fct = $fct_repo->findOneBy(array("id" => $id));
+        $em->remove($fct);
         $em->flush();
 
-        $status = "Ciclo borrado";
+        $status = "Fct borrada";
         $class = "alert-danger";
         $this->session->getFlashBag()->add("class", $class);
         $this->session->getFlashBag()->add("status", $status);
@@ -141,10 +94,10 @@ class FctController extends Controller {
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         } else {
-            return $this->redirectToRoute('listado_ciclo');
+            return $this->redirectToRoute('listado_fct');
         }
     }
-
+    
     public function registroAction(Request $request) {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -152,47 +105,64 @@ class FctController extends Controller {
 
         $isValid = false;
 
-        //FORM CICLO
+        //FORM FCT
 
-        $ciclo = new Ciclo();
-        $form = $this->createForm(CicloType::class, $ciclo);
+        $fct = new Fct();
+        $form = $this->createForm(FctType::class, $fct);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
 
-            $ciclo->setAbr($form->get("abr")->getData());
-            $ciclo->setGrado($form->get("grado")->getData());
-            $ciclo->setHoras($form->get("horas")->getData());
-            $ciclo->setNombre($form->get("nombre")->getData());
-            $ciclo->setPeriodo($form->get("periodo")->getData());
+            $fct->setAlumno($form->get("alumno")->getData());
+            $fct->setProfesor($form->get("profesor")->getData());
+            $fct->setEmpresa($form->get("empresa")->getData());
+            $fct->setPeriodo($form->get("periodo")->getData());
+            $fct->setAnyo($form->get("anyo")->getData());
 
             $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($ciclo);
+            $em->persist($fct);
             $flush = $em->flush();
             if ($flush == null) {
                 $isValid = true;
-                $status = "¡Ciclo creado con éxito :)!";
+                $status = "¡FCT creada con éxito :)!";
                 $class = "alert-success";
             } else {
-                $status = "No has registrado correctamente la empresa.";
+                $status = "No has registrado correctamente la FCT.";
                 $class = "alert-danger";
             }
-            //END FORM CICLO
+            //END FORM FCT
 
             $this->session->getFlashBag()->add("class", $class);
             $this->session->getFlashBag()->add("status", $status);
         }
 
         if ($isValid == false) {
-            return $this->render('FctBundle:Ciclo:registro.html.twig', array(
+            return $this->render('FctBundle:Fct:registro.html.twig', array(
                         "error" => $error,
                         "last_username" => $last_username,
                         "form" => $form->createView()
             ));
         } else {
-            return $this->redirectToRoute('listado_ciclo');
+            return $this->redirectToRoute('listado_fct');
         }
     }
-    */
+    
+    public function serializadorAction(){
+        $encoders = array(new XmlEncoder(), new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
 
+        $serializer = new Serializer($normalizers, $encoders);
+        
+        $fct = new Fct();
+        $em = $this->getDoctrine()->getEntityManager();
+        $fct_repo = $em->getRepository("FctBundle:Fct");
+        
+        $fct = $fct_repo->findAll();
+
+        $xmlcontent = $serializer->serialize($fct, 'xml');
+        
+        return $this->render('FctBundle:Fct:datos_sacados.xml.twig', array(
+                "xmlcontent" => $xmlcontent,
+            ));
+    }
 }

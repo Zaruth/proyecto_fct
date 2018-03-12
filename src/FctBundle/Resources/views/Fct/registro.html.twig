@@ -3,7 +3,7 @@
     <br/>
    <center>
         <div class="text-center col-lg-4 jumbotron">
-        <h2><h1><i class="fas fa-sync"></i> Registro Ciclo</h2>
+        <h2><i class="fas fa-briefcase"></i> Registro Empresa</h2>
         <hr/>
         {{form_start(form, {'action':'', 'method':'POST'})}}
         <div class="text-left">
@@ -17,29 +17,34 @@
                                     <li>{{ message }}</li>
                                 </ul>
                             {% endfor %}
-                            {{ form_errors(form.abr) }}
-                            {{ form_errors(form.nombre) }}
-                            {{ form_errors(form.grado) }}
-                            {{ form_errors(form.horas) }}
+                            {{ form_errors(form.alumno) }}
+                            {{ form_errors(form.profesor) }}
+                            {{ form_errors(form.empresa) }}
+                            {{ form_errors(form.periodo) }}
+                            {{ form_errors(form.fecha) }}
                         </div>
                     {% endfor %}
                 </div>
             {% endif %}
             <div class="form_row">
-                {{ form_label(form.abr) }}
-                {{ form_widget(form.abr) }}
+                {{ form_label(form.alumno) }}
+                {{ form_widget(form.alumno) }}
             </div>
             <div class="form_row">
-                {{ form_label(form.nombre) }}
-                {{ form_widget(form.nombre) }}
+                {{ form_label(form.profesor) }}
+                {{ form_widget(form.profesor) }}
             </div>
             <div class="form_row">
-                {{ form_label(form.grado) }}
-                {{ form_widget(form.grado) }}
+                {{ form_label(form.empresa) }}
+                {{ form_widget(form.empresa) }}
             </div>
             <div class="form_row">
-                {{ form_label(form.horas) }}
-                {{ form_widget(form.horas) }}
+                {{ form_label(form.periodo) }}
+                {{ form_widget(form.periodo) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.anyo) }}
+                {{ form_widget(form.anyo) }}
             </div>
             <br>
                 <center>{{ form_widget(form.Crear) }}</center>

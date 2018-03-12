@@ -86,12 +86,6 @@ class Ciclo
      */
     private $grado;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="periodo", type="string", length=30)
-     */
-    private $periodo;
 
     /**
      * @var int
@@ -181,30 +175,6 @@ class Ciclo
     public function getGrado()
     {
         return $this->grado;
-    }
-
-    /**
-     * Set periodo
-     *
-     * @param string $periodo
-     *
-     * @return Ciclo
-     */
-    public function setPeriodo($periodo)
-    {
-        $this->periodo = $periodo;
-
-        return $this;
-    }
-
-    /**
-     * Get periodo
-     *
-     * @return string
-     */
-    public function getPeriodo()
-    {
-        return $this->periodo;
     }
 
     /**
