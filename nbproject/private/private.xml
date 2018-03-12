@@ -3,15 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Resources/views/Alumno/perfil.html.twig</file>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Resources/config/validation.yml</file>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Controller/AlumnoController.php</file>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Resources/config/routing.yml</file>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Resources/views/Alumno/listado.html.twig</file>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Form/AlumnoType.php</file>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Resources/config/services.yml</file>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Resources/views/layout.html.twig</file>
-            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Resources/views/Alumno/registro.html.twig</file>
+            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Controller/DefaultController.php</file>
+            <file>file:/C:/xampp/htdocs/proyecto_fct/src/FctBundle/Resources/views/Default/index.html.twig</file>
         </group>
     </open-files>
 </project-private>

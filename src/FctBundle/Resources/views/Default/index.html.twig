@@ -18,9 +18,9 @@
                 <center><h1>Bienvenido</h1></center>
                 <p>Esta es la página principal de la aplicación.<br>
                 <p>Datos de conexión:<br><ul>
-                    {% if result["ResolveIPResult"]["Latitude"] != 0 %}
-                        <li>País: {{result["ResolveIPResult"]["Country"]}}</li>
-                        <li>Geoposición: Latitud({{result["ResolveIPResult"]["Latitude"]}}),Longitud({{result["ResolveIPResult"]["Longitude"]}})</li>
+                    {% if latitud != 0 %}
+                        <li>País: {{pais}}</li>
+                        <li>Geoposición: Latitud({{latitud}}),Longitud({{longitud}})</li>
                     {% else %}
                        <li> ERROR - Sin datos</li>
                     {% endif %}
