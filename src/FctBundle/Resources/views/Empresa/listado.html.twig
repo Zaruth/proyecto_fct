@@ -14,7 +14,7 @@
             <table class="table" align="center" style="max-width: 650px;">
                 <thead>
                     <tr>
-                        <th colspan="3" style="color:white;"><h1><i class="fas fa-child"></i> Alumnos</h1></th>
+                        <th colspan="3" style="color:white;"><h1><i class="fas fa-briefcase"></i> Empresas</h1></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -24,7 +24,7 @@
                                 <div style="width: 210px;">
                                     <form class="form-inline">
                                         <label class="mr-sm-2 text-dark font-weight-bold">Nº de entradas:</label>
-                                        <select class="form-control mb-2 mr-sm-2 mb-sm-0" onchange="window.location.href = '{{path("listado_alum")}}/' +    {{num_pag}} +'/' + $(this).val();">
+                                        <select class="form-control mb-2 mr-sm-2 mb-sm-0" onchange="window.location.href = '{{path("listado_emp")}}/' +     {{num_pag}} +'/' + $(this).val();">
                                             <option value="5" {% if per_pag == 5%}selected="selected"{% endif %}>5</option>
                                             <option value="10" {% if per_pag == 10%}selected="selected"{% endif %}>10</option>
                                             <option value="15" {% if per_pag == 15%}selected="selected"{% endif %}>15</option>
@@ -40,18 +40,14 @@
                             <td>No hay registros actualmente</td>
                         </tr>
                     {% else %}
-                        {% for alumno in usuarios %}
+                        {% for empresa in usuarios %}
                             <tr>
-                                <th scope="row" style="width: 165px;">{{alumno.nif}}</th>
-                                <td style="text-align: left;width: 385px;"><a class="text-info" href="{{path("ficha_alum")}}/{{alumno.nif}}">{{ alumno.nombre }} {{ alumno.ape1 }} {{ alumno.ape2 }}</a></td>
-                                {% if alumno.img == null %}
-                                    <td style="width: 100px;"><img src="{{ asset('img/data/default_alum.png')}}" style="width: 32px;height: 32px;"> <button onclick="$('#{{alumno.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
-                                {% else %}
-                                    <td style="width: 100px;"><img src="{{ asset('img/data') }}/{{alumno.img}}.jpg" style="width: 32px;height: 32px;"> <button onclick="$('#{{alumno.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
-                                {% endif %}
+                                <th scope="row" style="width: 165px;">{{empresa.cif}}</th>
+                                <td style="text-align: left;width: 385px;"><a class="text-info" href="{{path("ficha_emp")}}/{{empresa.cif}}">{{ empresa.nombre }}</a></td>
+                                <td style="width: 100px;"><img src="{{ asset('img/data/default_empr.png')}}" style="width: 32px;height: 32px;"> <button onclick="$('#{{empresa.cif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
                             </tr>
-                            <tr id="{{alumno.nif}}" style="display: none;" class="table-light">
-                                <td colspan="3" class="text-left table-light" style="color: black;">Tlf: {{alumno.tlf}}<br>Mail: <a class="link" href="mailto:{{alumno.mail}}" style="color: blue;">{{alumno.mail}}</a></td>
+                            <tr id="{{empresa.cif}}" style="display: none;" class="table-light">
+                                <td colspan="3" class="text-left table-light" style="color: black;">Tlf: {{empresa.tlf}}<br>Mail: <a class="link" href="mailto:{{empresa.mail}}" style="color: blue;">{{empresa.mail}}</a></td>
                             </tr>
                         {% endfor %}
                     {% endif %}
@@ -61,17 +57,17 @@
                             <div style="width: 100%;">
                                 <span style="margin:auto; display:table;">
                                     <div class="form-group form-inline">
-                                        <a href="{{path("listado_alum")}}/1/{{per_pag}}">
+                                        <a href="{{path("listado_emp")}}/1/{{per_pag}}">
                                             <button><i class="fas fa-angle-double-left"></i></button>
                                         </a>
 
                                         {% set num_menor = num_pag - 1 %}
                                         {%if num_menor >= 1%}
-                                            <a href="{{path("listado_alum")}}/{{num_menor}}/{{per_pag}}">
+                                            <a href="{{path("listado_emp")}}/{{num_menor}}/{{per_pag}}">
                                                 <button><i class="fas fa-angle-left"></i></button>
                                             </a>
                                         {%else%}
-                                            <a href="{{path("listado_alum")}}/1/{{per_pag}}">
+                                            <a href="{{path("listado_emp")}}/1/{{per_pag}}">
                                                 <button><i class="fas fa-angle-left"></i></button>
                                             </a>
                                         {%endif%}
@@ -85,20 +81,20 @@
 
                                         {% set num_mayor = num_pag + 1 %}
                                         {%if num_mayor <= pageCount%}
-                                            <a href="{{path("listado_alum")}}/{{num_mayor}}/{{per_pag}}">
+                                            <a href="{{path("listado_emp")}}/{{num_mayor}}/{{per_pag}}">
                                                 <button><i class="fas fa-angle-right"></i></button>
                                             </a>
                                         {%else%}
-                                            <a href="{{path("listado_alum")}}/{{pageCount}}/{{per_pag}}">
+                                            <a href="{{path("listado_emp")}}/{{pageCount}}/{{per_pag}}">
                                                 <button><i class="fas fa-angle-right"></i></button>
                                             </a>
                                         {%endif%}
 
-                                        <a href="{{path("listado_alum")}}/{{pageCount}}/{{per_pag}}">
+                                        <a href="{{path("listado_emp")}}/{{pageCount}}/{{per_pag}}">
                                             <button><i class="fas fa-angle-double-right"></i></button>
                                         </a>
                                     </div>
-                                    <button onclick="window.location.href = '{{path("listado_alum")}}/' + $('#input_pag').val() + '/{{per_pag}}';">Ir a pag <i class="far fa-arrow-alt-circle-right"></i></button>
+                                    <button onclick="window.location.href = '{{path("listado_emp")}}/' + $('#input_pag').val() + '/{{per_pag}}';">Ir a pag <i class="far fa-arrow-alt-circle-right"></i></button>
                                 </span>
                             </div>
                         </td>

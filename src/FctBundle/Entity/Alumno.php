@@ -3,8 +3,10 @@
 namespace FctBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\OneToMany;
 
 /**
  * Alumno
@@ -15,18 +17,19 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Alumno
 {
     /**
-     * One Alumno has Many Ciclos.
-     * @OneToMany(targetEntity="Ciclo", mappedBy="alumno")
+     * Many alumno have One ciclo.
+     * @ManyToOne(targetEntity="Ciclo", inversedBy="alumnos")
+     * @JoinColumn(name="ciclo_id", referencedColumnName="id")
      */
-     private $ciclos;
+     private $ciclo;
      
      /**
      * One Alumno has Many Fct.
      * @OneToMany(targetEntity="Fct", mappedBy="alumno")
      */
     private $fcts;
+    
     public function __construct() {
-        $this->ciclos = new ArrayCollection();
         $this->fcts = new ArrayCollection();
     }
     
@@ -116,6 +119,29 @@ class Alumno
      */
     private $mail;
 
+    /**
+     * Get ciclo
+     *
+     * @return int
+     */
+    public function getCiclo()
+    {
+        return $this->ciclo;
+    }
+
+    /**
+     * Set ciclo
+     *
+     * @param int $ciclo
+     *
+     * @return Alumno
+     */
+    public function setCiclo($ciclo)
+    {
+        $this->ciclo = $ciclo;
+
+        return $this;
+    }
 
     /**
      * Get id

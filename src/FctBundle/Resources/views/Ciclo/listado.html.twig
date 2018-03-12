@@ -1,0 +1,65 @@
+{% extends "FctBundle::layout.html.twig" %}
+
+{% block content %}
+    <br/>
+    <center>
+        <div class="text-center col-lg-4 jumbotron" style="max-width: 800px;">
+            {% for class in app.session.flashbag().get('class') %}
+                <div class="alert {{ class }}">
+                    {% for message in app.session.flashbag().get('status') %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <table class="table" align="center" style="max-width: 650px;">
+                <thead>
+                    <tr>
+                        <th colspan="3" style="color:white;"><h1><i class="fas fa-sync"></i> Ciclos</h1></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if ciclos != null %}
+                        <tr class="table-active">
+                            <td align="left" colspan="3">
+                                <label class="mr-sm-2 text-light font-weight-bold">Ciclo: <a class="text-info" href="{{path("ficha_ciclo")}}/{{id}}">{{ciclo.nombre}}</a></label>
+                                <select class="form-control" onchange="window.location.href = '{{path("listado_ciclo")}}/' + $(this).val();">
+                                    {% for ciclo in ciclos %}
+                                        <option value="{{ciclo.id}}" {% if id == ciclo.id%}selected="selected"{% endif %}>{{ciclo.abr}} - {{ciclo.nombre}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                        </tr>
+                        {% if alumnos != null %}
+                            {% for alumno in alumnos %}
+                                <tr class="table-default">
+                                    <th scope="row" style="width: 165px;">{{alumno.nif}}</th>
+                                    <td style="text-align: left;width: 385px;"><a class="text-info" href="{{path("ficha_alum")}}/{{alumno.nif}}">{{ alumno.nombre }} {{ alumno.ape1 }} {{ alumno.ape2 }}</a></td>
+                                    {% if alumno.img == null %}
+                                        <td style="width: 100px;"><img src="{{ asset('img/data/default_alum.png')}}" style="width: 32px;height: 32px;"> <button onclick="$('#{{alumno.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
+                                    {% else %}
+                                        <td style="width: 100px;"><img src="{{ asset('img/data') }}/{{alumno.img}}.jpg" style="width: 32px;height: 32px;"> <button onclick="$('#{{alumno.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
+                                    {% endif %}
+                                </tr>
+                                <tr id="{{alumno.nif}}" style="display: none;" class="table-light">
+                                    <td colspan="3" class="text-left table-light" style="color: black;">Tlf: {{alumno.tlf}}<br>Mail: <a class="link" href="mailto:{{alumno.mail}}" style="color: blue;">{{alumno.mail}}</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr class="table-default">
+                                <td class="text-light" colspan="3">
+                                    Este ciclo no tiene alumnos actualmente :(
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% else %}
+                        <tr class="table-active">
+                            <td class="text-light" colspan="3">
+                                No hay registros actualmente :(
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </center>
+{% endblock %}

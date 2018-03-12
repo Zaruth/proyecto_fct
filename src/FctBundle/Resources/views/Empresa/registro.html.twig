@@ -3,7 +3,7 @@
     <br/>
    <center>
         <div class="text-center col-lg-4 jumbotron">
-        <h2><h1><i class="fas fa-child"></i> Registro Alumno</h2>
+        <h2><i class="fas fa-briefcase"></i> Registro Empresa</h2>
         <hr/>
         {{form_start(form, {'action':'', 'method':'POST'})}}
         <div class="text-left">
@@ -32,20 +32,12 @@
                 </div>
             {% endif %}
             <div class="form_row">
-                {{ form_label(form.nif) }}
-                {{ form_widget(form.nif) }}
+                {{ form_label(form.cif) }}
+                {{ form_widget(form.cif) }}
             </div>
             <div class="form_row">
                 {{ form_label(form.nombre) }}
                 {{ form_widget(form.nombre) }}
-            </div>
-            <div class="form_row">
-                {{ form_label(form.ape1) }}
-                {{ form_widget(form.ape1) }}
-            </div>
-            <div class="form_row">
-                {{ form_label(form.ape2) }}
-                {{ form_widget(form.ape2) }}
             </div>
             <div class="form_row">
                 {{ form_label(form.direccion) }}

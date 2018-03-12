@@ -32,7 +32,7 @@ funcion_panel:
     defaults: { _controller: FctBundle:Profesor:funcion_panel, id: ~, numero: ~}
 
 
-
+### PROFESORES ###
 #Perfil de profesor
 perfil:
     path: /perfil/{nif}
@@ -47,6 +47,7 @@ delete_prof:
     defaults: { _controller: FctBundle:Profesor:delete, nif: ~}
 
 
+### ALUMNOS ###
 #Perfil del alumno
 ficha_alum:
     path: /ficha_alum/{nif}
@@ -59,7 +60,46 @@ listado_alum:
 reg_alum:
     path: /reg_alum
     defaults: { _controller: FctBundle:Alumno:registro }
-#Borrado de profesor
+#Borrado de alumnos
 delete_alum:
     path: /delete_alum/{nif}
     defaults: { _controller: FctBundle:Alumno:delete, nif: ~}
+    
+    
+### EMPRESAS ###
+#Perfil del empresa
+ficha_emp:
+    path: /ficha_emp/{cif}
+    defaults: { _controller: FctBundle:Empresa:ficha, cif: ~ }
+#Listado empresa
+listado_emp:
+    path: /listado_emp/{num_pag}/{per_pag}
+    defaults: { _controller: FctBundle:Empresa:listado, num_pag:1 , per_pag:5}
+#Registro de empresa
+reg_emp:
+    path: /reg_emp
+    defaults: { _controller: FctBundle:Empresa:registro }
+#Borrado de empresa
+delete_emp:
+    path: /delete_emp/{cif}
+    defaults: { _controller: FctBundle:Empresa:delete, cif: ~}
+
+
+
+### CICLOS ###
+#Perfil del Ciclo
+ficha_ciclo:
+    path: /ficha_ciclo/{id}
+    defaults: { _controller: FctBundle:Ciclo:ficha, id: ~}
+#Listado Ciclos
+listado_ciclo:
+    path: /listado_ciclo/{id}
+    defaults: { _controller: FctBundle:Ciclo:listado, id: ~}
+#Registro de Ciclo
+reg_ciclo:
+    path: /reg_ciclo
+    defaults: { _controller: FctBundle:Ciclo:registro }
+#Borrado de Ciclo
+delete_ciclo:
+    path: /delete_ciclo/{id}
+    defaults: { _controller: FctBundle:Ciclo:delete, id: ~}

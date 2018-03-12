@@ -58,9 +58,9 @@
                                             <i class="fas fa-briefcase"></i> Empresas
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
-                                            <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
+                                            <a class="dropdown-item" href="{{path("listado_emp")}}"><i class="fas fa-list"></i> Listado </a>
                                             {% if app.user.role != 'ROLE_USER' %}
-                                                <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="far fa-plus-square"></i> Agregar </a>
+                                                <a class="dropdown-item" href="{{path("reg_emp")}}"><i class="far fa-plus-square"></i> Agregar </a>
                                             {% endif %}
                                         </div>
                                     </span>
@@ -71,9 +71,9 @@
                                             <i class="fas fa-sync"></i> Ciclos
                                         </a>
                                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="font-size:20px;">
-                                            <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="fas fa-list"></i> Listado </a>
+                                            <a class="dropdown-item" href="{{path("listado_ciclo")}}"><i class="fas fa-list"></i> Listado </a>
                                             {% if app.user.role != 'ROLE_USER' %}
-                                                <a class="dropdown-item" href="{{path("listado_prof")}}"><i class="far fa-plus-square"></i> Agregar </a>
+                                                <a class="dropdown-item" href="{{path("reg_ciclo")}}"><i class="far fa-plus-square"></i> Agregar </a>
                                             {% endif %}
                                         </div>
                                     </span>

@@ -30,6 +30,30 @@ class Profesor implements UserInterface
      */
     private $ciclos;
     
+    /**
+     * Get ciclos
+     *
+     * @return array
+     */
+    public function getCiclos()
+    {
+        return $this->ciclos;
+    }
+
+    /**
+     * Set ciclos
+     *
+     * @param array $ciclos
+     *
+     * @return Profesor
+     */
+    public function setCiclos($ciclos)
+    {
+        $this->ciclos = $ciclos;
+
+        return $this;
+    }
+    
     public function __construct() {
         $this->fcts = new ArrayCollection();
         $this->ciclos = new ArrayCollection();

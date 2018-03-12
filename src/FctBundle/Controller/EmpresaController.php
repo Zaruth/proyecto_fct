@@ -5,10 +5,10 @@ namespace FctBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
-use FctBundle\Entity\Alumno;
-use FctBundle\Form\AlumnoType;
+use FctBundle\Entity\Empresa;
+use FctBundle\Form\EmpresaType;
 
-class AlumnoController extends Controller
+class EmpresaController extends Controller
 {
     private $session;
 
@@ -24,22 +24,22 @@ class AlumnoController extends Controller
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
         
-        $alumnos = new Alumno();
+        $empresas = new Empresa();
         $em = $this->getDoctrine()->getEntityManager();
-        $alumno_repo = $em->getRepository("FctBundle:Alumno");
+        $empresa_repo = $em->getRepository("FctBundle:Empresa");
 
         
-        $alumnos = $alumno_repo->getPaginateEntries($num_pag,$per_pag);
+        $empresas = $empresa_repo->getPaginateEntries($num_pag,$per_pag);
         
-        $totalitems = count($alumnos);
+        $totalitems = count($empresas);
         $pageCount = ceil($totalitems/$per_pag);
         
         if($num_pag > $pageCount){
             $num_pag = $pageCount;
-            $alumnos = $alumno_repo->getPaginateEntries($num_pag,$per_pag);
+            $empresas = $empresa_repo->getPaginateEntries($num_pag,$per_pag);
         }
         
-        $totalitems = count($alumnos);
+        $totalitems = count($empresas);
         $pageCount = ceil($totalitems/$per_pag);
         
         
@@ -50,10 +50,10 @@ class AlumnoController extends Controller
             $this->session->getFlashBag()->add("status", $status);
             return $this->redirectToRoute('fct_homepage');
         } else {
-            return $this->render('FctBundle:Alumno:listado.html.twig', array(
+            return $this->render('FctBundle:Empresa:listado.html.twig', array(
                 "error" => $error,
                 "last_username" => $last_username,
-                "usuarios" => $alumnos,
+                "usuarios" => $empresas,
                 "num_pag" => $num_pag,
                 "per_pag" => $per_pag,
                 "pageCount" => $pageCount
@@ -61,19 +61,19 @@ class AlumnoController extends Controller
         }
     }
     
-    public function fichaAction(Request $request, $nif) {
+    public function fichaAction(Request $request, $cif) {
 
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
 
-        $alumno = new Alumno();
+        $empresa = new Empresa();
         $em = $this->getDoctrine()->getEntityManager();
-        $alumno_repo = $em->getRepository("FctBundle:Alumno");
+        $empresa_repo = $em->getRepository("FctBundle:Empresa");
 
-        $alumno = $alumno_repo->findOneBy(array("nif" => $nif));
+        $empresa = $empresa_repo->findOneBy(array("cif" => $cif));
 
-        if (count($alumno) == 0) {
+        if (count($empresa) == 0) {
             $status = "No existe ese usuario :(";
             $class = "alert-danger";
             $this->session->getFlashBag()->add("class", $class);
@@ -81,37 +81,32 @@ class AlumnoController extends Controller
         }
 
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->redirectToRoute('listado_alum');
+            return $this->redirectToRoute('listado_emp');
         } else {
-            return $this->render('FctBundle:Alumno:perfil.html.twig', array(
+            return $this->render('FctBundle:Empresa:perfil.html.twig', array(
                         "error" => $error,
                         "last_username" => $last_username,
-                        "usuario" => $alumno
+                        "usuario" => $empresa
             ));
         }
     }
     
-    public function deleteAction(Request $request, $nif) {
+    public function deleteAction(Request $request, $cif) {
         $salir = false;
-        $user = $this->getUser();
-        if ($user->getNif() == $nif) {
-            $this->session->invalidate();
-        }
-
 
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
 
-        $alumno = new Alumno();
+        $empresa = new Empresa();
         $em = $this->getDoctrine()->getEntityManager();
-        $alumno_repo = $em->getRepository("FctBundle:Alumno");
+        $empresa_repo = $em->getRepository("FctBundle:Empresa");
 
-        $alumno = $alumno_repo->findOneBy(array("nif" => $nif));
-        $em->remove($alumno);
+        $empresa = $empresa_repo->findOneBy(array("cif" => $cif));
+        $em->remove($empresa);
         $em->flush();
 
-        $status = "Alumno borrado";
+        $status = "Empresa borrada";
         $class = "alert-danger";
         $this->session->getFlashBag()->add("class", $class);
         $this->session->getFlashBag()->add("status", $status);
@@ -120,7 +115,7 @@ class AlumnoController extends Controller
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
         } else {
-            return $this->redirectToRoute('listado_alum');
+            return $this->redirectToRoute('listado_emp');
         }
     }
     
@@ -131,39 +126,36 @@ class AlumnoController extends Controller
 
         $isValid = false;
 
-        //FORM ALUMNO
+        //FORM EMPRESA
 
-        $alumno = new Alumno();
-        $form = $this->createForm(AlumnoType::class, $alumno);
+        $empresa = new Empresa();
+        $form = $this->createForm(EmpresaType::class, $empresa);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
                 $em = $this->getDoctrine()->getEntityManager();
-                $alumno_repo = $em->getRepository("FctBundle:Alumno");
-                $mail_alumno = $alumno_repo->findOneBy(array("mail" => $form->get("mail")->getData()));
+                $empresa_repo = $em->getRepository("FctBundle:Empresa");
+                $mail_empresa = $empresa_repo->findOneBy(array("mail" => $form->get("mail")->getData()));
 
-                if (count($mail_alumno) == 0) {
-                    $alumno = new Alumno();
-                    $alumno->setNif($form->get("nif")->getData());
-                    $alumno->setNombre($form->get("nombre")->getData());
-                    $alumno->setApe1($form->get("ape1")->getData());
-                    $alumno->setApe2($form->get("ape2")->getData());
-                    $alumno->setDireccion($form->get("direccion")->getData());
-                    $alumno->setPoblacion($form->get("poblacion")->getData());
-                    $alumno->setCp($form->get("cp")->getData());
-                    $alumno->setProvincia($form->get("provincia")->getData());
-                    $alumno->setTlf($form->get("tlf")->getData());
-                    $alumno->setMail($form->get("mail")->getData());
-                    $alumno->setImg(null);
-                    $alumno->setCiclo(null);
+                if (count($mail_empresa) == 0) {
+                    $empresa = new Empresa();
+                    $empresa->setCif($form->get("cif")->getData());
+                    $empresa->setNombre($form->get("nombre")->getData());
+                    $empresa->setDireccion($form->get("direccion")->getData());
+                    $empresa->setPoblacion($form->get("poblacion")->getData());
+                    $empresa->setCp($form->get("cp")->getData());
+                    $empresa->setProvincia($form->get("provincia")->getData());
+                    $empresa->setTlf($form->get("tlf")->getData());
+                    $empresa->setMail($form->get("mail")->getData());
+                    $empresa->setTutorLaboral(null);
 
                     $em = $this->getDoctrine()->getEntityManager();
-                    $em->persist($alumno);
+                    $em->persist($empresa);
                     $flush = $em->flush();
                     if ($flush == null) {
                         $isValid = true;
-                        $status = "¡Usuario creado con éxito :)!";
+                        $status = "¡Empresa creada con éxito :)!";
                         $class = "alert-success";
                     }
                 } else {
@@ -171,18 +163,18 @@ class AlumnoController extends Controller
                     $class = "alert-danger";
                 }
             } else {
-                $status = "No has registrado correctamente al alumno.";
+                $status = "No has registrado correctamente la empresa.";
                 $class = "alert-danger";
             }
 
-            //END FORM ALUMNO
+            //END FORM EMPRESA
             $this->session->getFlashBag()->add("class", $class);
             $this->session->getFlashBag()->add("status", $status);
         }
         if ($isValid) {
-            return $this->redirectToRoute('listado_alum');
+            return $this->redirectToRoute('listado_emp');
         } else {
-            return $this->render('FctBundle:Alumno:registro.html.twig', array(
+            return $this->render('FctBundle:Empresa:registro.html.twig', array(
                 "error" => $error,
                 "last_username" => $last_username,
                 "form" => $form->createView()

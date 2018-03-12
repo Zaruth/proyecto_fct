@@ -99,3 +99,67 @@ FctBundle\Entity\Alumno:
             - Regex:
                 pattern: '/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/'
                 message: "El email debe tener un formato correcto y como máximo 50 carácteres."
+
+FctBundle\Entity\Empresa:
+    properties:
+        cif:
+            - NotBlank: {message: "El nif está vacío."}
+            - Regex:
+                pattern: '/(([X-Z]{1})([-]?)(\d{7})([-]?)([A-Z]{1}))|((\d{8})([-]?)([A-Z]{1}))/'
+                message: "El CIF debe ser de 8 dígitos y 1 letra en mayúsculas."
+        nombre:
+            - NotBlank: {message: "El nombre está vacío."}
+            - Regex:
+                pattern: "/([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})/"
+                message: "El nombre debe ser de 3 a 30 carácteres."
+        direccion:
+            - NotBlank: {message: "La dirección está vacía."}
+            - Regex:
+                pattern: "/([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ1234567890º ']{10,50})/"
+                message: "La dirección debe ser de 3 a 30 carácteres."
+        poblacion:
+            - NotBlank: {message: "La población está vacía."}
+            - Regex:
+                pattern: "/([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})/"
+                message: "La poblacion debe ser de 3 a 30 carácteres."
+        cp:
+            - NotBlank: {message: "El código postal está vacío."}
+            - Regex:
+                pattern: "/[1234567890]{5}/"
+                message: "El código postal debe de ser una serie de 5 dígitos."
+        provincia:
+            - NotBlank: {message: "La provincia está vacío."}
+            - Regex:
+                pattern: "/([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})/"
+                message: "La provincia debe ser de 3 a 30 carácteres."
+        tlf:
+            - NotBlank: {message: "El telefono está vacío."}
+            - Regex:
+                pattern: '/\d{9}/'
+                message: "El telefono debe de ser de 9 dígitos."
+        mail:
+            - NotBlank: {message: "El email está vacío."}
+            - Length:
+                max: 50
+                maxMessage: 'La longitud máxima del email es de 50 carácteres.'
+            - Regex:
+                pattern: '/\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/'
+                message: "El email debe tener un formato correcto y como máximo 50 carácteres."
+
+FctBundle\Entity\Ciclo:
+    properties:
+        abr:
+            - NotBlank: {message: "El nif está vacío."}
+            - Regex:
+                pattern: "/([A-ZÑÁÉÍÓÚÜ1234567890º ']{10,50})/"
+                message: "La abrebiatura debe ser una serie de 2 a 10 carácteres(mayúsculas)."
+        nombre:
+            - NotBlank: {message: "El nombre está vacío."}
+            - Regex:
+                pattern: "/([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ1234567890º ']{10,50})/"
+                message: "El nombre debe ser de 10 a 50 carácteres."
+        horas:
+            - NotBlank: {message: "El código postal está vacío."}
+            - Regex:
+                pattern: "/[1234567890]{2,11}/"
+                message: "Las horas deben de ser una serie de hasta 11 dígitos."

@@ -63,6 +63,14 @@
                                 <td style="text-align: left;">PROFESOR</td>
                             {% endif %}
                         </tr>
+                        <tr>
+                            <th scope="row" style="text-align: right;">Ciclos:</th>
+                            <td style="text-align: left;">
+                                {% for ciclo in usuario.ciclos %}
+                                    <a class="text-info" href="{{path("ficha_ciclo")}}/{{ciclo.id}}">{{ ciclo.abr }} {{ ciclo.nombre }}</a><br>
+                                {% endfor %}
+                            </td>
+                        </tr>
                     {% else %}
                         {% if app.user.img != null %}
                             <tr>
@@ -121,21 +129,21 @@
                 </button>
                 <div id="myModal" class="modal fade" role="dialog">
                     <div class="modal-dialog modal-md">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Confirmar borrado</h4><button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>¿Está seguro que desea eliminar el perfil de <strong>'{{usuario.nombre}} {{usuario.ape1}} {{usuario.ape2}}'</strong>?<br> Esta acción no puede deshacerse.</p>
-                                    <center>
-                                        <input type="hidden" name="id" value="">
-                                        <a href="{{path("delete_prof")}}/{{usuario.nif}}"><button type="submit" id="submit" name="deleteUser" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">Borrar perfil</button></a>
-                                    </center>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-arrow-left"></i> Cancelar</button>
-                                </div>
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Confirmar borrado</h4><button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar el perfil de <strong>'{{usuario.nombre}} {{usuario.ape1}} {{usuario.ape2}}'</strong>?<br> Esta acción no puede deshacerse.</p>
+                                <center>
+                                    <input type="hidden" name="id" value="">
+                                    <a href="{{path("delete_prof")}}/{{usuario.nif}}"><button type="submit" id="submit" name="deleteUser" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">Borrar perfil</button></a>
+                                </center>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-arrow-left"></i> Cancelar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             {% endif %}

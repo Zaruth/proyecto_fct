@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
-class AlumnoType extends AbstractType
+class EmpresaType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -18,29 +18,17 @@ class AlumnoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('nif',TextType::class, array("label"=>"Nif","required"=>"required","attr" =>array(
+            ->add('cif',TextType::class, array("label"=>"Cif","required"=>"required","attr" =>array(
                 "class" => "form-name form-control",
                 "maxlength"=>"9",
                 "pattern"=>"(([X-Z]{1})([-]?)(\d{7})([-]?)([A-Z]{1}))|((\d{8})([-]?)([A-Z]{1}))",
-                "title"=>"Dni de 8 dígitos y 1 letra en mayúsculas"
+                "title"=>"CIF de 8 dígitos y 1 letra en mayúsculas"
                 )))
             ->add('nombre',TextType::class, array("label"=>"Nombre","required"=>"required","attr" =>array(
                 "class" => "form-name form-control",
                 "maxlength"=>"30",
                 "pattern"=>"([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})",
                 "title"=>"Nombre de 3 a 30 carácteres"
-                )))
-            ->add('ape1',TextType::class, array("label"=>"Primer Apellido","required"=>"required","attr" =>array(
-                "class" => "form-name form-control",
-                "maxlength"=>"30",
-                "pattern"=>"([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})",
-                "title"=>"Apellido de 3 a 30 carácteres"
-                )))
-            ->add('ape2',TextType::class, array("label"=>"Segundo Apellido","required"=>"required","attr" =>array(
-                "class" => "form-name form-control",
-                "maxlength"=>"30",
-                "pattern"=>"([a-zA-ZñÑáéíóúÁÉÍÓÚüÜ ']{3,30})",
-                "title"=>"Apellido de 3 a 30 carácteres"
                 )))
             ->add('direccion',TextType::class, array("label"=>"Dirección","required"=>"required","attr" =>array(
                 "class" => "form-name form-control",
@@ -89,7 +77,7 @@ class AlumnoType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'FctBundle\Entity\Alumno'
+            'data_class' => 'FctBundle\Entity\Empresa'
         ));
     }
 }

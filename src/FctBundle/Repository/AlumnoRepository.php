@@ -15,7 +15,7 @@ class AlumnoRepository extends \Doctrine\ORM\EntityRepository
     public function getPaginateEntries($currentPage=1,$pageSize=5){
         $em = $this->getEntityManager();
         
-        $dql = "SELECT p FROM FctBundle\Entity\Alumno p ORDER BY p.id ASC";
+        $dql = "SELECT a FROM FctBundle\Entity\Alumno a ORDER BY a.id ASC";
         
         $query = $em->createQuery($dql)
                 ->setFirstResult($pageSize*($currentPage - 1))

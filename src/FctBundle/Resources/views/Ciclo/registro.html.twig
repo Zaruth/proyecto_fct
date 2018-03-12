@@ -1,0 +1,55 @@
+{% extends "FctBundle::layout.html.twig" %}
+{% block content %}
+    <br/>
+   <center>
+        <div class="text-center col-lg-4 jumbotron">
+        <h2><h1><i class="fas fa-sync"></i> Registro Ciclo</h2>
+        <hr/>
+        {{form_start(form, {'action':'', 'method':'POST'})}}
+        <div class="text-left">
+            {% if app.session.flashbag().get('status')|length > 0 %}
+                <div>
+                    {% for class in app.session.flashbag().get('class') %}
+                        <div class="alert {{ class }}">
+                            Tienes los siguientes errores:<br>
+                            {% for message in app.session.flashbag().get('status') %}
+                                <ul>
+                                    <li>{{ message }}</li>
+                                </ul>
+                            {% endfor %}
+                            {{ form_errors(form.abr) }}
+                            {{ form_errors(form.nombre) }}
+                            {{ form_errors(form.grado) }}
+                            {{ form_errors(form.periodo) }}
+                            {{ form_errors(form.horas) }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <div class="form_row">
+                {{ form_label(form.abr) }}
+                {{ form_widget(form.abr) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.nombre) }}
+                {{ form_widget(form.nombre) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.grado) }}
+                {{ form_widget(form.grado) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.periodo) }}
+                {{ form_widget(form.periodo) }}
+            </div>
+            <div class="form_row">
+                {{ form_label(form.horas) }}
+                {{ form_widget(form.horas) }}
+            </div>
+            <br>
+                <center>{{ form_widget(form.Crear) }}</center>
+                </div>
+        {{form_end(form)}}
+    </div>
+    <div class="clearfix"></div></center>
+{% endblock %}

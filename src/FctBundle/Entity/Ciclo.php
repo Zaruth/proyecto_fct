@@ -3,9 +3,9 @@
 namespace FctBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\ManyToMany;
-use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Ciclo
@@ -16,18 +16,43 @@ use Doctrine\ORM\Mapping\JoinColumn;
 class Ciclo
 {
     /**
-     * Many Ciclos have One alumno.
-     * @ManyToOne(targetEntity="Alumno", inversedBy="ciclos")
-     * @JoinColumn(name="alumno_id", referencedColumnName="id")
+     * One ciclo has Many alumnos.
+     * @OneToMany(targetEntity="Alumno", mappedBy="ciclo")
      */
-    private $alumno;
+    private $alumnos;
     
     /**
      * Many Ciclo have Many Profesor.
      * @ManyToMany(targetEntity="Profesor", mappedBy="ciclos")
      */
     private $profesores;
+    
+    /**
+     * Get profesores
+     *
+     * @return array
+     */
+    public function getProfesores()
+    {
+        return $this->profesores;
+    }
+
+    /**
+     * Set profesores
+     *
+     * @param array $profesores
+     *
+     * @return Ciclo
+     */
+    public function setProfesores($profesores)
+    {
+        $this->profesores = $profesores;
+
+        return $this;
+    }
+    
     public function __construct() {
+        $this->alumnos = new ArrayCollection();
         $this->profesores = new \Doctrine\Common\Collections\ArrayCollection();
     }
     

@@ -37,13 +37,13 @@
                     </tr>
                     {% for profesor in usuarios %}
                         <tr>
-                            <th scope="row">{{profesor.nif}}</th>
-                            <td style="text-align: left"><a href="{{path("perfil")}}/{{profesor.nif}}">{{ profesor.nombre }} {{ profesor.ape1 }} {{ profesor.ape2 }}</a></td>
+                            <th scope="row" style="width: 165px;">{{profesor.nif}}</th>
+                            <td style="text-align: left;width: 385px;"><a class="text-info" href="{{path("perfil")}}/{{profesor.nif}}">{{ profesor.nombre }} {{ profesor.ape1 }} {{ profesor.ape2 }}</a></td>
                             {% if profesor.img == null %}
-                                <td style="text-align: left;"><img src="{{ asset('img/data/default_prof.png')}}" style="width: 32px;height: 32px;"> <button onclick="$('#{{profesor.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
-                                    {% else %}
-                                <td style="text-align: left;"><img src="{{ asset('img/data') }}/{{profesor.img}}.jpg" style="width: 32px;height: 32px;"> <button onclick="$('#{{profesor.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
-                                    {% endif %}
+                                <td style="width: 100px;"><img src="{{ asset('img/data/default_prof.png')}}" style="width: 32px;height: 32px;"> <button onclick="$('#{{profesor.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
+                            {% else %}
+                                <td style="width: 100px;"><img src="{{ asset('img/data') }}/{{profesor.img}}.jpg" style="width: 32px;height: 32px;"> <button onclick="$('#{{profesor.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
+                            {% endif %}
                         </tr>
                         <tr id="{{profesor.nif}}" style="display: none;" class="table-light">
                             <td colspan="3" class="text-left table-light" style="color: black;">Tlf: {{profesor.tlf}}<br>Mail: <a class="link" href="mailto:{{profesor.mail}}" style="color: blue;">{{profesor.mail}}</a></td>

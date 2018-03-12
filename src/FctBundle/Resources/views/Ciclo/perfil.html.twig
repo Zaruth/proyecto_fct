@@ -1,0 +1,86 @@
+{% extends "FctBundle::layout.html.twig" %}
+
+{% block content %}
+    <br/>
+    <center>
+        <div class="text-center col-lg-4 jumbotron" style="max-width: 600px;">
+
+            {% for class in app.session.flashbag().get('class') %}
+                <div class="alert {{ class }}">
+                    {% for message in app.session.flashbag().get('status') %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <table class="table" align="center" style="max-width: 400px;">
+                <thead>
+                    <tr>
+                        <th colspan="2"><h1><i class="fas fa-sync"></i> Ciclo</h1></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row" style="text-align: right;">Abrebiatura:</th>
+                        <td style="text-align: left;">{{usuario.abr}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" style="text-align: right;">Nombre:</th>
+                        <td style="text-align: left;">{{usuario.Nombre}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" style="text-align: right;">Grado:</th>
+                        <td style="text-align: left;">{{usuario.grado}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" style="text-align: right;">Periodo:</th>
+                        <td style="text-align: left;">{{usuario.periodo}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" style="text-align: right;">Horas:</th>
+                        <td style="text-align: left;">{{usuario.horas}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" style="text-align: right;">Nº de alumnos:</th>
+                        <td style="text-align: left;">{{num_alumnos}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row" style="text-align: right;">Profesores:</th>
+                        <td style="text-align: left;">
+                            {% for profesor in usuario.profesores %}
+                                <a class="text-info" href="{{path("perfil")}}/{{profesor.nif}}">{{ profesor.nif }} {{ profesor.nombre }} {{ profesor.ape1 }} {{ profesor.ape2 }}</a><br>
+                            {% endfor %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <a href="{{path("listado_ciclo")}}/{{usuario.id}}"><button class="btn btn-success">Listado</button></a> <a href="{{path("fct_homepage")}}"><button class="btn btn-success">Inicio</button></a>
+
+            {% if app.user.role != 'ROLE_USER' %}
+                <a href="#"><button class="btn btn-warning">Modificar</button></a>
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#myModal">
+                    <i class="fa fa-trash" aria-hidden="true"></i>  
+                    Borrar
+                </button>
+                <div id="myModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Confirmar borrado</h4><button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>¿Está seguro que desea eliminar el ciclo <strong>'{{usuario.nombre}}'</strong>?<br> Esta acción no puede deshacerse.</p>
+                                <center>
+                                    <input type="hidden" name="id" value="">
+                                    <a href="{{path("delete_ciclo")}}/{{usuario.id}}"><button type="submit" id="submit" name="deleteUser" class="btn btn-danger btn-lg" data-toggle="modal" data-target="#myModal">Borrar ciclo</button></a>
+                                </center>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-arrow-left"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </center>
+{% endblock %}
