@@ -21,8 +21,6 @@ se especifiquen sus datos de creación, como el host, el usuario,etc.
 
 Por último, si faltan las dependencias del cliente SOAP, ejecutar
 lo siguiente:
-## Install
-
 ```sh
 $ composer require econea/nusoap
 ```
