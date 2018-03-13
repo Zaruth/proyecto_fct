@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use FctBundle\Entity\Profesor;
 use FctBundle\Entity\Alumno;
+use FctBundle\Entity\Empresa;
 use FctBundle\Form\ProfesorType;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
@@ -14,19 +15,34 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Controlador de la clase profesor
+ */
 class ProfesorController extends Controller {
 
+    /**
+     * Variable de Sesión de la app
+     * @var Session 
+     */
     private $session;
 
+    /**
+     * Constructor de la variable de Sesión
+     */
     public function __construct() {
         $this->session = new Session();
     }
-    
+
+    /**
+     * Muestra el panel de administración de los SUPER ADMIN
+     * @param Request $request
+     * @return Vista
+     */
     public function panel_maestroAction(Request $request) {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
-        
+
         if ($this->getUser()->getRole() != 'ROLE_SUPER_ADMIN') {
             $status = "No tienes acceso al panel maestro.";
             $class = "alert-danger";
@@ -35,15 +51,22 @@ class ProfesorController extends Controller {
             return $this->redirectToRoute('fct_homepage');
         } else {
             return $this->render('FctBundle:Profesor:panel.html.twig', array(
-                "error" => $error,
-                "last_username" => $last_username,
+                        "error" => $error,
+                        "last_username" => $last_username,
             ));
         }
     }
-    
+
+    /**
+     * Ejecuta las distintas funciones del panel
+     * @param Request $request
+     * @param integer $id
+     * @param integer $numero
+     * @return Vista
+     */
     public function funcion_panelAction(Request $request, $id, $numero) {
         if ($id != null) {
-            switch ($id){
+            switch ($id) {
                 case 1:
                     $this->generar_profesores($numero);
                     $status = "Datos de prueba generados.";
@@ -70,7 +93,7 @@ class ProfesorController extends Controller {
                     break;
             }
         }
-        
+
         if ($this->getUser()->getRole() != 'ROLE_SUPER_ADMIN') {
             $status = "No tienes acceso al panel maestro.";
             $class = "alert-danger";
@@ -84,33 +107,39 @@ class ProfesorController extends Controller {
         }
     }
 
+    /**
+     * Muestra el listado de profesores
+     * @param integer $num_pag
+     * @param integer $per_pag
+     * @return Vista
+     */
     public function listadoAction($num_pag, $per_pag) {
-        if($num_pag < 1){
+        if ($num_pag < 1) {
             $num_pag = 1;
         }
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
-        
+
         $profesores = new Profesor();
         $em = $this->getDoctrine()->getEntityManager();
         $profesor_repo = $em->getRepository("FctBundle:Profesor");
 
-        
-        $profesores = $profesor_repo->getPaginateEntries($num_pag,$per_pag);
-        
+
+        $profesores = $profesor_repo->getPaginateEntries($num_pag, $per_pag);
+
         $totalitems = count($profesores);
-        $pageCount = ceil($totalitems/$per_pag);
-        
-        if($num_pag > $pageCount){
+        $pageCount = ceil($totalitems / $per_pag);
+
+        if ($num_pag > $pageCount) {
             $num_pag = $pageCount;
-            $profesores = $profesor_repo->getPaginateEntries($num_pag,$per_pag);
+            $profesores = $profesor_repo->getPaginateEntries($num_pag, $per_pag);
         }
-        
+
         $totalitems = count($profesores);
-        $pageCount = ceil($totalitems/$per_pag);
-        
-        
+        $pageCount = ceil($totalitems / $per_pag);
+
+
         if (!$this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             $status = "No tienes acceso.";
             $class = "alert-danger";
@@ -119,16 +148,22 @@ class ProfesorController extends Controller {
             return $this->redirectToRoute('fct_homepage');
         } else {
             return $this->render('FctBundle:Profesor:listado.html.twig', array(
-                "error" => $error,
-                "last_username" => $last_username,
-                "usuarios" => $profesores,
-                "num_pag" => $num_pag,
-                "per_pag" => $per_pag,
-                "pageCount" => $pageCount
+                        "error" => $error,
+                        "last_username" => $last_username,
+                        "usuarios" => $profesores,
+                        "num_pag" => $num_pag,
+                        "per_pag" => $per_pag,
+                        "pageCount" => $pageCount
             ));
         }
     }
 
+    /**
+     * Muestra el perfil de un profesor
+     * @param Request $request
+     * @param string $nif
+     * @return Vista
+     */
     public function perfilAction(Request $request, $nif) {
 
         $authenticationUtils = $this->get("security.authentication_utils");
@@ -159,6 +194,13 @@ class ProfesorController extends Controller {
         }
     }
 
+    /**
+     * Borra un profesor y sus relaciones
+     * @param Request $request
+     * @param string $nif
+     * @return Vista
+     * @throws Vista
+     */
     public function deleteAction(Request $request, $nif) {
         $salir = false;
         $user = $this->getUser();
@@ -176,6 +218,13 @@ class ProfesorController extends Controller {
         $profesor_repo = $em->getRepository("FctBundle:Profesor");
 
         $profesor = $profesor_repo->findOneBy(array("nif" => $nif));
+        $profesor->getCiclos()->removeElement($profesor->getCiclos());
+        
+        $empresa = new Empresa();
+        $empresa_repo = $em->getRepository("FctBundle:Empresa");
+        $empresa = $empresa_repo->findOneBy(array("tutorLaboral" => $profesor->getNombre().' '.$profesor->getApe1().' '.$profesor->getApe2()));
+        $empresa->setTutorLaboral(null);
+        
         $em->remove($profesor);
         $em->flush();
 
@@ -192,11 +241,16 @@ class ProfesorController extends Controller {
         }
     }
 
+    /**
+     * Muestra la pantalla de login
+     * @param Request $request
+     * @return Vista
+     */
     public function loginAction(Request $request) {
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             return $this->redirectToRoute('fct_homepage');
-        } 
-        
+        }
+
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
         $last_username = $authenticationUtils->getLastUsername();
@@ -210,11 +264,17 @@ class ProfesorController extends Controller {
         }
 
         return $this->render('FctBundle:Profesor:login.html.twig', array(
-            "error" => $error,
-            "last_username" => $last_username
+                    "error" => $error,
+                    "last_username" => $last_username
         ));
     }
 
+    /**
+     * Muestra la pantalla de registro de profesores
+     * @param Request $request
+     * @return Vista
+     * @throws Vista
+     */
     public function registroAction(Request $request) {
         if ($this->get('security.authorization_checker')->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw $this->createAccessDeniedException();
@@ -280,59 +340,59 @@ class ProfesorController extends Controller {
         }
         if ($isValid) {
             return $this->render('FctBundle:Default:index.html.twig', array(
-                "error" => $error,
-                "last_username" => $last_username
+                        "error" => $error,
+                        "last_username" => $last_username
             ));
         } else {
             return $this->render('FctBundle:Profesor:registro.html.twig', array(
-                "error" => $error,
-                "last_username" => $last_username,
-                "form" => $form->createView()
+                        "error" => $error,
+                        "last_username" => $last_username,
+                        "form" => $form->createView()
             ));
         }
     }
-    
+
     /**
      * Genera un numero de profesores de prueba
      * con nombre de usuario y contraseña idénticos.
      * También borra los usuarios de prueba anteriores.
-     * @param int $numero
+     * @param integer $numero
      */
     public function generar_profesores($numero) {
         $em = $this->getDoctrine()->getEntityManager();
         $qb = $em->createQueryBuilder();
-        
+
         $qb->select('p.nif')
-            ->from('FctBundle\Entity\Profesor', 'p')
-            ->where($qb->expr()->like('p.nuser', "'%user%'"));
-        
+                ->from('FctBundle\Entity\Profesor', 'p')
+                ->where($qb->expr()->like('p.nuser', "'%user%'"));
+
         $query = $qb->getQuery();
         $results = $query->getResult();
-        
+
         $profesor_repo = $em->getRepository("FctBundle:Profesor");
-        
-        for($i = 0;$i < count($results);$i++){
+
+        for ($i = 0; $i < count($results); $i++) {
             $profesor = $profesor_repo->findOneBy(array("nif" => $results[$i]["nif"]));
             $em->remove($profesor);
         }
         $flush = $em->flush();
-        
-        for($i = 0;$i < $numero;$i++){
+
+        for ($i = 0; $i < $numero; $i++) {
             $profesor = new Profesor();
-            $profesor->setNif("user".$i);
-            $profesor->setNombre("user".$i);
-            $profesor->setApe1("user".$i);
-            $profesor->setApe2("user".$i);
-            $profesor->setNuser("user".$i);
+            $profesor->setNif("user" . $i);
+            $profesor->setNombre("user" . $i);
+            $profesor->setApe1("user" . $i);
+            $profesor->setApe2("user" . $i);
+            $profesor->setNuser("user" . $i);
 
             $factory = $this->get("security.encoder_factory");
             $encoder = $factory->getEncoder($profesor);
-            $password = $encoder->encodePassword("user".$i, $profesor->getSalt());
+            $password = $encoder->encodePassword("user" . $i, $profesor->getSalt());
 
             $profesor->setPass($password);
 
             $profesor->setTlf(700700700);
-            $profesor->setMail("user".$i."@gmail.com");
+            $profesor->setMail("user" . $i . "@gmail.com");
             $profesor->setRole("ROLE_USER");
             $profesor->setImg(null);
 
@@ -341,46 +401,52 @@ class ProfesorController extends Controller {
         }
         $flush = $em->flush();
     }
-    
+
+    /**
+     * Genera un numero de alumnos de prueba
+     * con nombre de nombres y nifs idénticos.
+     * También borra los alumnos de prueba anteriores.
+     * @param integer $numero
+     */
     public function generar_alumnos($numero) {
         $em = $this->getDoctrine()->getEntityManager();
         $qb = $em->createQueryBuilder();
-        
+
         $qb->select('a.nif')
-            ->from('FctBundle\Entity\Alumno', 'a')
-            ->where($qb->expr()->like('a.nif', "'%alum%'"));
-        
+                ->from('FctBundle\Entity\Alumno', 'a')
+                ->where($qb->expr()->like('a.nif', "'%alum%'"));
+
         $query = $qb->getQuery();
         $results = $query->getResult();
-        
+
         $alumno_repo = $em->getRepository("FctBundle:Alumno");
-        
-        for($i = 0;$i < count($results);$i++){
+
+        for ($i = 0; $i < count($results); $i++) {
             $alumno = $alumno_repo->findOneBy(array("nif" => $results[$i]["nif"]));
             $em->remove($alumno);
         }
         $flush = $em->flush();
-        
-        for($i = 0;$i < $numero;$i++){
+
+        for ($i = 0; $i < $numero; $i++) {
             $alumno = new Alumno();
-            $alumno->setNif("alum".$i);
-            $alumno->setNombre("alum".$i);
-            $alumno->setApe1("alum".$i);
-            $alumno->setApe2("alum".$i);
+            $alumno->setNif("alum" . $i);
+            $alumno->setNombre("alum" . $i);
+            $alumno->setApe1("alum" . $i);
+            $alumno->setApe2("alum" . $i);
             $alumno->setImg(null);
-            $alumno->setDireccion("alum".$i);
-            $alumno->setPoblacion("alum".$i);
+            $alumno->setDireccion("alum" . $i);
+            $alumno->setPoblacion("alum" . $i);
             $alumno->setCp(20007);
-            $alumno->setProvincia("alum".$i);
+            $alumno->setProvincia("alum" . $i);
             $alumno->setTlf(600600600);
-            $alumno->setMail("alum".$i."@gmail.com");
-            
+            $alumno->setMail("alum" . $i . "@gmail.com");
+
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($alumno);
         }
         $flush = $em->flush();
     }
-    
+
     /**
      * Borra todos los profesores de la base de datos excepto
      * los que posean el rol SUPER_ADMIN
@@ -388,58 +454,78 @@ class ProfesorController extends Controller {
     public function borrar_profesores() {
         $em = $this->getDoctrine()->getEntityManager();
         $qb = $em->createQueryBuilder();
-        
+
         $qb->select('p.nif')
-            ->from('FctBundle\Entity\Profesor', 'p')
-            ->where("p.role != 'ROLE_SUPER_ADMIN'");
-        
+                ->from('FctBundle\Entity\Profesor', 'p')
+                ->where("p.role != 'ROLE_SUPER_ADMIN'");
+
         $query = $qb->getQuery();
         $results = $query->getResult();
-        
+
         $profesor_repo = $em->getRepository("FctBundle:Profesor");
-        
-        for($i = 0;$i < count($results);$i++){
+
+        for ($i = 0; $i < count($results); $i++) {
             $profesor = $profesor_repo->findOneBy(array("nif" => $results[$i]["nif"]));
             $em->remove($profesor);
         }
         $flush = $em->flush();
     }
-    
+
+    /**
+     * Borra todos los alumnos de la base de datos
+     */
     public function borrar_alumnos() {
         $em = $this->getDoctrine()->getEntityManager();
         $qb = $em->createQueryBuilder();
-        
+
         $qb->select('a.nif')
-            ->from('FctBundle\Entity\Alumno', 'a');
-        
+                ->from('FctBundle\Entity\Alumno', 'a');
+
         $query = $qb->getQuery();
         $results = $query->getResult();
-        
+
         $alumno_repo = $em->getRepository("FctBundle:Alumno");
-        
-        for($i = 0;$i < count($results);$i++){
+
+        for ($i = 0; $i < count($results); $i++) {
             $alumno = $alumno_repo->findOneBy(array("nif" => $results[$i]["nif"]));
             $em->remove($alumno);
         }
         $flush = $em->flush();
     }
-    
-    public function serializadorAction(){
+
+    /**
+     * Serializa los datos de la base de datos de profesores en un archivo XML
+     * @return Vista
+     */
+    public function serializadorAction() {
         $encoders = array(new XmlEncoder(), new JsonEncoder());
-        $normalizers = array(new ObjectNormalizer());
+        
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(10);
+        // Add Circular reference handler
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $normalizers = array($normalizer);
 
         $serializer = new Serializer($normalizers, $encoders);
-        
+
         $profesores = new Profesor();
         $em = $this->getDoctrine()->getEntityManager();
         $profesor_repo = $em->getRepository("FctBundle:Profesor");
-        
+
         $profesores = $profesor_repo->findAll();
 
         $xmlcontent = $serializer->serialize($profesores, 'xml');
+
+        $xmlcontent = trim(str_replace('<?xml version="1.0"?>',"",$xmlcontent));
+        $xmlcontent = trim(str_replace('<response>',"",$xmlcontent));
+        $xmlcontent = trim(str_replace('</response>',"",$xmlcontent));
         
-        return $this->render('FctBundle:Profesor:datos_sacados.xml.twig', array(
-                "xmlcontent" => $xmlcontent,
-            ));
+        $response = new Response();
+        $response->headers->set('Content-Type', 'xml');
+        $response->headers->set('charset','utf-8');
+        return $this->render('FctBundle:Profesor:datos_sacados.xml.twig', array('xmlcontent' => $xmlcontent), $response);
     }
+
 }

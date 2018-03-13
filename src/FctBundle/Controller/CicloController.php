@@ -16,14 +16,29 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Controlador de la entidad ciclo
+ */
 class CicloController extends Controller {
 
+    /**
+     * Variable de Sesión de la app
+     * @var Session 
+     */
     private $session;
 
+    /**
+     * Constructor de la variable de Sesión
+     */
     public function __construct() {
         $this->session = new Session();
     }
 
+    /**
+     * Muestra el listado de ciclos y sus alumnos.
+     * @param integer $id
+     * @return Vista
+     */
     public function listadoAction($id) {
 
         $authenticationUtils = $this->get("security.authentication_utils");
@@ -85,7 +100,13 @@ class CicloController extends Controller {
             }
         }
     }
-
+    
+    /**
+     * Muestra la ficha de datos de un ciclo.
+     * @param Request $request
+     * @param integer $id
+     * @return Vista
+     */
     public function fichaAction(Request $request, $id) {
 
         $authenticationUtils = $this->get("security.authentication_utils");
@@ -122,7 +143,14 @@ class CicloController extends Controller {
             }
         }
     }
-
+    
+    /**
+     * Borra un ciclo y sus relaciones
+     * @param Request $request
+     * @param integer $id
+     * @return Vista
+     * @throws Vista
+     */
     public function deleteAction(Request $request, $id) {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -164,7 +192,12 @@ class CicloController extends Controller {
             return $this->redirectToRoute('listado_ciclo');
         }
     }
-
+    
+    /**
+     * Registra un ciclo
+     * @param Request $request
+     * @return Vista
+     */
     public function registroAction(Request $request) {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -213,12 +246,23 @@ class CicloController extends Controller {
         }
     }
     
+    /**
+     * Serializa los datos de la base de datos de ciclos en un archivo XML
+     * @return Vista
+     */
     public function serializadorAction(){
         $encoders = array(new XmlEncoder(), new JsonEncoder());
-        $normalizers = array(new ObjectNormalizer());
+        
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(10);
+        // Add Circular reference handler
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $normalizers = array($normalizer);
 
         $serializer = new Serializer($normalizers, $encoders);
-        
+
         $ciclo = new Ciclo();
         $em = $this->getDoctrine()->getEntityManager();
         $ciclo_repo = $em->getRepository("FctBundle:Ciclo");
@@ -227,8 +271,13 @@ class CicloController extends Controller {
 
         $xmlcontent = $serializer->serialize($ciclo, 'xml');
         
-        return $this->render('FctBundle:Fct:datos_sacados.xml.twig', array(
-                "xmlcontent" => $xmlcontent,
-            ));
+        $xmlcontent = trim(str_replace('<?xml version="1.0"?>',"",$xmlcontent));
+        $xmlcontent = trim(str_replace('<response>',"",$xmlcontent));
+        $xmlcontent = trim(str_replace('</response>',"",$xmlcontent));
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'xml');
+        $response->headers->set('charset','utf-8');
+        return $this->render('FctBundle:Ciclo:datos_sacados.xml.twig', array('xmlcontent' => $xmlcontent), $response);
     }
 }

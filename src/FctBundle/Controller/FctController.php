@@ -18,14 +18,30 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Controlador de la entidad fct
+ */
 class FctController extends Controller {
 
+    /**
+     * Variable de Sesión de la app
+     * @var Session 
+     */
     private $session;
 
+    /**
+     * Constructor de la variable de Sesión
+     */
     public function __construct() {
         $this->session = new Session();
     }
 
+    /**
+     * Muestra el listado de FCTs
+     * @param integer $num_pag
+     * @param integer $per_pag
+     * @return Vista
+     */
     public function listadoAction($num_pag, $per_pag) {
         if($num_pag < 1){
             $num_pag = 1;
@@ -71,6 +87,13 @@ class FctController extends Controller {
         }
     }
 
+    /**
+     * Borra una fct
+     * @param Request $request
+     * @param integer $id
+     * @return Vista
+     * @throws Vista
+     */
     public function deleteAction(Request $request, $id) {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -98,6 +121,11 @@ class FctController extends Controller {
         }
     }
     
+    /**
+     * Muestra el registro de una fct
+     * @param Request $request
+     * @return Vista
+     */
     public function registroAction(Request $request) {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -147,12 +175,23 @@ class FctController extends Controller {
         }
     }
     
+    /**
+     * Serializa los datos de la base de datos de fcts en un archivo XML
+     * @return Vista
+     */
     public function serializadorAction(){
         $encoders = array(new XmlEncoder(), new JsonEncoder());
-        $normalizers = array(new ObjectNormalizer());
+        
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(10);
+        // Add Circular reference handler
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $normalizers = array($normalizer);
 
         $serializer = new Serializer($normalizers, $encoders);
-        
+
         $fct = new Fct();
         $em = $this->getDoctrine()->getEntityManager();
         $fct_repo = $em->getRepository("FctBundle:Fct");
@@ -161,8 +200,13 @@ class FctController extends Controller {
 
         $xmlcontent = $serializer->serialize($fct, 'xml');
         
-        return $this->render('FctBundle:Fct:datos_sacados.xml.twig', array(
-                "xmlcontent" => $xmlcontent,
-            ));
+        $xmlcontent = trim(str_replace('<?xml version="1.0"?>',"",$xmlcontent));
+        $xmlcontent = trim(str_replace('<response>',"",$xmlcontent));
+        $xmlcontent = trim(str_replace('</respons>',"",$xmlcontent));
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'xml');
+        $response->headers->set('charset','utf-8');
+        return $this->render('FctBundle:Fct:datos_sacados.xml.twig', array('xmlcontent' => $xmlcontent), $response);
     }
 }

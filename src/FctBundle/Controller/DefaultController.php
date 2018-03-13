@@ -6,14 +6,28 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * Controlador por defecto
+ */
 class DefaultController extends Controller {
 
+    /**
+     * Variable de Sesión de la app
+     * @var Session 
+     */
     private $session;
 
+    /**
+     * Constructor de la variable de Sesión
+     */
     public function __construct() {
         $this->session = new Session();
     }
     
+    /**
+     * Devuelve la página de inicio
+     * @return Vista
+     */
     public function indexAction() {
         
         
@@ -26,6 +40,9 @@ class DefaultController extends Controller {
             ));
     }
     
+    /**
+     * Inicia las variables de sesion
+     */
     public function iniciaSession() {
         if(!$this->get('session')->has('pais') || !$this->get('session')->has('longitud') || !$this->get('session')->has('latitud')){
             $result = $this->geolocalizacion();
@@ -35,6 +52,10 @@ class DefaultController extends Controller {
         }
     }
     
+    /**
+     * Crea una petición con el cliente de SOAP para obetener la geolposición y otros datos.
+     * @return array
+     */
     public function geolocalizacion(){
         // Config
         $client = new \nusoap_client('http://ws.cdyne.com/ip2geo/ip2geo.asmx?WSDL', 'wsdl');

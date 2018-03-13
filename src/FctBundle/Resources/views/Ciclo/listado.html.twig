@@ -29,6 +29,11 @@
                                 </select>
                             </td>
                         </tr>
+                        <tr class="table-info">
+                            <th scope="row">NIF</th>
+                            <th scope="row">NOMBRE Y APELLIDOS</th>
+                            <th scope="row">MÁS...</th>
+                        </tr>
                         {% if alumnos != null %}
                             {% for alumno in alumnos %}
                                 <tr class="table-default">
@@ -36,9 +41,9 @@
                                     <td style="text-align: left;width: 385px;"><a class="text-info" href="{{path("ficha_alum")}}/{{alumno.nif}}">{{ alumno.nombre }} {{ alumno.ape1 }} {{ alumno.ape2 }}</a></td>
                                     {% if alumno.img == null %}
                                         <td style="width: 100px;"><img src="{{ asset('img/data/default_alum.png')}}" style="width: 32px;height: 32px;"> <button onclick="$('#{{alumno.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
-                                    {% else %}
+                                            {% else %}
                                         <td style="width: 100px;"><img src="{{ asset('img/data') }}/{{alumno.img}}.jpg" style="width: 32px;height: 32px;"> <button onclick="$('#{{alumno.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
-                                    {% endif %}
+                                            {% endif %}
                                 </tr>
                                 <tr id="{{alumno.nif}}" style="display: none;" class="table-light">
                                     <td colspan="3" class="text-left table-light" style="color: black;">Tlf: {{alumno.tlf}}<br>Mail: <a class="link" href="mailto:{{alumno.mail}}" style="color: blue;">{{alumno.mail}}</a></td>

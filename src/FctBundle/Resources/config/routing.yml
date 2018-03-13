@@ -3,10 +3,11 @@ fct_homepage:
     path: /
     defaults: { _controller: FctBundle:Default:index }
     
+
 #XML profesor
 serializador_profesor:
     path: /serializador/profesor
-    defaults: { _controller: FctBundle:Profesor:serializador }
+    defaults: { _controller: FctBundle:Profesor:serializador, _format: xml }
 #XML alumno
 serializador_alumno:
     path: /serializador/alumno

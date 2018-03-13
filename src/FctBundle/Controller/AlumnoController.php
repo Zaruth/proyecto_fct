@@ -13,14 +13,30 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Controlador de la entidad alumno
+ */
 class AlumnoController extends Controller
 {
+    /**
+     * Variable de Sesión de la app
+     * @var Session 
+     */
     private $session;
 
+    /**
+     * Constructor de la variable de Sesión
+     */
     public function __construct() {
         $this->session = new Session();
     }
     
+    /**
+     * Muestra el listado de alumnos
+     * @param integer $num_pag
+     * @param integer $per_pag
+     * @return Vista
+     */
     public function listadoAction($num_pag, $per_pag) {
         if($num_pag < 1){
             $num_pag = 1;
@@ -66,6 +82,12 @@ class AlumnoController extends Controller
         }
     }
     
+    /**
+     * Muestra la ficha de un alumno
+     * @param Request $request
+     * @param string $nif
+     * @return Vista
+     */
     public function fichaAction(Request $request, $nif) {
 
         $authenticationUtils = $this->get("security.authentication_utils");
@@ -96,6 +118,13 @@ class AlumnoController extends Controller
         }
     }
     
+    /**
+     * Borra un alumno y sus relaciones
+     * @param Request $request
+     * @param string $nif
+     * @return Vista
+     * @throws Vista
+     */
     public function deleteAction(Request $request, $nif) {
         $salir = false;
         $user = $this->getUser();
@@ -129,6 +158,11 @@ class AlumnoController extends Controller
         }
     }
     
+    /**
+     * Muestra el registro de alumno
+     * @param Request $request
+     * @return Vista
+     */
     public function registroAction(Request $request) {
         $authenticationUtils = $this->get("security.authentication_utils");
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -195,12 +229,23 @@ class AlumnoController extends Controller
         }
     }
     
+    /**
+     * Serializa los datos de la base de datos de alumnos en un archivo XML
+     * @return Vista
+     */
     public function serializadorAction(){
         $encoders = array(new XmlEncoder(), new JsonEncoder());
-        $normalizers = array(new ObjectNormalizer());
+        
+        $normalizer = new ObjectNormalizer();
+        $normalizer->setCircularReferenceLimit(10);
+        // Add Circular reference handler
+        $normalizer->setCircularReferenceHandler(function ($object) {
+            return $object->getId();
+        });
+        $normalizers = array($normalizer);
 
         $serializer = new Serializer($normalizers, $encoders);
-        
+
         $alumno = new Alumno();
         $em = $this->getDoctrine()->getEntityManager();
         $alumno_repo = $em->getRepository("FctBundle:Alumno");
@@ -209,8 +254,13 @@ class AlumnoController extends Controller
 
         $xmlcontent = $serializer->serialize($alumno, 'xml');
         
-        return $this->render('FctBundle:Fct:datos_sacados.xml.twig', array(
-                "xmlcontent" => $xmlcontent,
-            ));
+        $xmlcontent = trim(str_replace('<?xml version="1.0"?>',"",$xmlcontent));
+        $xmlcontent = trim(str_replace('<response>',"",$xmlcontent));
+        $xmlcontent = trim(str_replace('</response>',"",$xmlcontent));
+        
+        $response = new Response();
+        $response->headers->set('Content-Type', 'xml');
+        $response->headers->set('charset','utf-8');
+        return $this->render('FctBundle:Alumno:datos_sacados.xml.twig', array('xmlcontent' => $xmlcontent), $response);
     }
 }

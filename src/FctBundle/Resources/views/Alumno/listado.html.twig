@@ -24,7 +24,7 @@
                                 <div style="width: 210px;">
                                     <form class="form-inline">
                                         <label class="mr-sm-2 text-dark font-weight-bold">Nº de entradas:</label>
-                                        <select class="form-control mb-2 mr-sm-2 mb-sm-0" onchange="window.location.href = '{{path("listado_alum")}}/' +    {{num_pag}} +'/' + $(this).val();">
+                                        <select class="form-control mb-2 mr-sm-2 mb-sm-0" onchange="window.location.href = '{{path("listado_alum")}}/' +     {{num_pag}} +'/' + $(this).val();">
                                             <option value="5" {% if per_pag == 5%}selected="selected"{% endif %}>5</option>
                                             <option value="10" {% if per_pag == 10%}selected="selected"{% endif %}>10</option>
                                             <option value="15" {% if per_pag == 15%}selected="selected"{% endif %}>15</option>
@@ -34,6 +34,11 @@
                                 </div>
                             </div>
                         </td>
+                    </tr>
+                    <tr class="table-info">
+                        <th scope="row">NIF</th>
+                        <th scope="row">NOMBRE Y APELLIDOS</th>
+                        <th scope="row">MÁS...</th>
                     </tr>
                     {% if usuarios|length == 0 %}
                         <tr>
@@ -46,9 +51,9 @@
                                 <td style="text-align: left;width: 385px;"><a class="text-info" href="{{path("ficha_alum")}}/{{alumno.nif}}">{{ alumno.nombre }} {{ alumno.ape1 }} {{ alumno.ape2 }}</a></td>
                                 {% if alumno.img == null %}
                                     <td style="width: 100px;"><img src="{{ asset('img/data/default_alum.png')}}" style="width: 32px;height: 32px;"> <button onclick="$('#{{alumno.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
-                                {% else %}
+                                        {% else %}
                                     <td style="width: 100px;"><img src="{{ asset('img/data') }}/{{alumno.img}}.jpg" style="width: 32px;height: 32px;"> <button onclick="$('#{{alumno.nif}}').toggle();"><i class="fas fa-angle-down"></i></button></td>
-                                {% endif %}
+                                        {% endif %}
                             </tr>
                             <tr id="{{alumno.nif}}" style="display: none;" class="table-light">
                                 <td colspan="3" class="text-left table-light" style="color: black;">Tlf: {{alumno.tlf}}<br>Mail: <a class="link" href="mailto:{{alumno.mail}}" style="color: blue;">{{alumno.mail}}</a></td>
